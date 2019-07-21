@@ -1,0 +1,40 @@
+:host {
+    width: 100%;
+    height: 100%;
+}
+
+.position {
+    position: absolute;
+    color: cornsilk;
+    font-size: 10px;
+    left: 2px;
+    top: 2px;
+}
+
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    &.collapsed {
+        background-color: darkred;
+        cursor: not-allowed;
+    }
+
+    $base-color: deeppink;
+
+    &:not(.collapsed).selected {
+        background-color: lighten($base-color, 30%);
+    }
+
+    &:not(.collapsed) {
+        background-color: $base-color;
+        cursor: pointer;
+    }
+
+    &:not(.collapsed):not(.selected):hover {
+        background-color: lighten($base-color, 25%);
+        transition: background-color 120ms ease-in;
+    }
+}

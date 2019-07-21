@@ -1,0 +1,9 @@
+<section
+    [ngStyle]="{'background-image': 'url(assets/characters/heads/' + character.photo + '.png)'}"
+    (click)="selectCharacter(character)">
+    <app-health-points
+        [healthPoints]="character.healthPoints"
+        [healthPointsTotal]="character.healthPointsTotal">
+    </app-health-points>
+    <div>{{ character.name }}</div>
+</section>

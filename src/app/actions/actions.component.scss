@@ -1,0 +1,16 @@
+:host {
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    margin: 3px;
+}
+
+fieldset div {
+    display: flex;
+    flex-direction: row;
+    width: 280px;
+    flex-wrap: wrap;
+    justify-content: center;
+}

@@ -1,0 +1,25 @@
+:host {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+mat-grid-list {
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 0 !important;
+}
+
+$actions-height: 130px;
+
+@media (orientation: landscape) {
+    mat-grid-list {
+        max-width: calc(100vh - #{$actions-height});
+    }
+}
+
+@media (orientation: portrait) {
+    mat-grid-list {
+        max-width: 90vw;
+    }
+}

@@ -1,4 +1,12 @@
 import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from './store/app.state';
+import {initArena} from './store/actions/arena.actions';
+import {addCharacter} from './store/actions/characters.actions';
+import {CharacterService} from './services/character.service';
+import {ArenaService} from './services/arena.service';
+import {Character} from './store/models/character.model';
+import {Position} from './store/models/position.model';
 
 @Component({
     selector: 'app-root',
@@ -6,4 +14,25 @@ import {Component} from '@angular/core';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
+    constructor(private store: Store<AppState>,
+                private characterService: CharacterService,
+                private arenaService: ArenaService) {
+
+        const arena = arenaService.generateArena(5, 5);
+        store.dispatch(initArena({arena}));
+
+        [
+            {name: 'Bob', healthPoints: 3, healthPointsTotal: 3, photo: 1},
+            {name: 'Alice', healthPoints: 3, healthPointsTotal: 3, photo: 2},
+        ].reduce((characters, character) => {
+            const position: Position = characterService.getRandomAvailablePosition(arena, characters);
+            const characterToAdd: Character = {...character, position, availableActions: []};
+            characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
+            store.dispatch(addCharacter({character: characterToAdd}));
+            return [...characters, characterToAdd];
+        }, []);
+
+    }
+
 }

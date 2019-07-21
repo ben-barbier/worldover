@@ -1,0 +1,5 @@
+<mat-grid-list [cols]="(arena | async).width">
+    <mat-grid-tile *ngFor="let square of (arena | async).squares">
+        <app-square mat-ripple [square]="square"></app-square>
+    </mat-grid-tile>
+</mat-grid-list>
