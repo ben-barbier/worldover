@@ -3,8 +3,9 @@ import {State, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
 import {collapseArena} from '../store/actions/arena.actions';
 import {ArenaService} from '../services/arena.service';
-import {ActionType} from '../store/models/character.model';
-import {moveCharacter} from '../store/actions/characters.actions';
+import {ActionType, Character} from '../store/models/character.model';
+import {attackCharacter, moveCharacter} from '../store/actions/characters.actions';
+import {CharacterService} from '../services/character.service';
 
 @Component({
     selector: 'app-actions',
@@ -17,7 +18,8 @@ export class ActionsComponent {
 
     constructor(private store: Store<AppState>,
                 private state: State<AppState>,
-                private arenaService: ArenaService) {
+                private arenaService: ArenaService,
+                private characterService: CharacterService) {
     }
 
     public collapse(): void {
@@ -38,11 +40,32 @@ export class ActionsComponent {
     }
 
     public executeAction(actionType: ActionType) {
-        const selectedCharacter = this.state.getValue().selectedCharacter;
+        const selectedCharacter: Character = this.state.getValue().selectedCharacter;
+        const characters: Character[] = this.state.getValue().characters;
         const action = selectedCharacter.availableActions.find(a => a.type === actionType);
-        this.store.dispatch(moveCharacter({
-            character: selectedCharacter,
-            destination: action.target,
-        }));
+
+        if ([ActionType.MOVE_UP,
+            ActionType.MOVE_RIGHT,
+            ActionType.MOVE_BOTTOM,
+            ActionType.MOVE_LEFT,
+        ].includes(actionType)) {
+            this.store.dispatch(moveCharacter({
+                character: selectedCharacter,
+                destination: action.target,
+            }));
+        }
+
+        if ([
+            ActionType.ATTACK_UP,
+            ActionType.ATTACK_RIGHT,
+            ActionType.ATTACK_BOTTOM,
+            ActionType.ATTACK_LEFT,
+        ].includes(actionType)) {
+            this.store.dispatch(attackCharacter({
+                attacker: selectedCharacter,
+                target: this.characterService.getPositionCharacter(action.target, characters),
+            }));
+        }
+
     }
 }

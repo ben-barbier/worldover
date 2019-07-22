@@ -1,10 +1,15 @@
 <fieldset>
     <legend>Actions</legend>
     <div>
-        <button mat-raised-button (click)="executeAction(actionType.MOVE_UP)" [disabled]="!hasAction(actionType.MOVE_UP)"><mat-icon>arrow_upward</mat-icon></button>
-        <button mat-raised-button (click)="executeAction(actionType.MOVE_RIGHT)" [disabled]="!hasAction(actionType.MOVE_RIGHT)"><mat-icon>arrow_forward</mat-icon></button>
-        <button mat-raised-button (click)="executeAction(actionType.MOVE_BOTTOM)" [disabled]="!hasAction(actionType.MOVE_BOTTOM)"><mat-icon>arrow_downward</mat-icon></button>
-        <button mat-raised-button (click)="executeAction(actionType.MOVE_LEFT)" [disabled]="!hasAction(actionType.MOVE_LEFT)"><mat-icon>arrow_back</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="executeAction(actionType.MOVE_UP)" [disabled]="!hasAction(actionType.MOVE_UP)"><mat-icon>arrow_upward</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="executeAction(actionType.MOVE_RIGHT)" [disabled]="!hasAction(actionType.MOVE_RIGHT)"><mat-icon>arrow_forward</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="executeAction(actionType.MOVE_BOTTOM)" [disabled]="!hasAction(actionType.MOVE_BOTTOM)"><mat-icon>arrow_downward</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="executeAction(actionType.MOVE_LEFT)" [disabled]="!hasAction(actionType.MOVE_LEFT)"><mat-icon>arrow_back</mat-icon></button>
+        <br />
+        <button mat-raised-button color="warn" (click)="executeAction(actionType.ATTACK_UP)" [disabled]="!hasAction(actionType.ATTACK_UP)">⚔<mat-icon>arrow_upward</mat-icon></button>
+        <button mat-raised-button color="warn" (click)="executeAction(actionType.ATTACK_RIGHT)" [disabled]="!hasAction(actionType.ATTACK_RIGHT)">⚔<mat-icon>arrow_forward</mat-icon></button>
+        <button mat-raised-button color="warn" (click)="executeAction(actionType.ATTACK_BOTTOM)" [disabled]="!hasAction(actionType.ATTACK_BOTTOM)">⚔<mat-icon>arrow_downward</mat-icon></button>
+        <button mat-raised-button color="warn" (click)="executeAction(actionType.ATTACK_LEFT)" [disabled]="!hasAction(actionType.ATTACK_LEFT)">⚔️<mat-icon>arrow_back</mat-icon></button>
         <br />
         <button mat-raised-button (click)="collapse()">Collapse 💥</button>
         <button mat-raised-button (click)="reset()">Reset ♻️</button>

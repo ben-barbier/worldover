@@ -20,4 +20,8 @@ export enum ActionType {
     MOVE_RIGHT,
     MOVE_BOTTOM,
     MOVE_LEFT,
+    ATTACK_UP,
+    ATTACK_RIGHT,
+    ATTACK_BOTTOM,
+    ATTACK_LEFT,
 }

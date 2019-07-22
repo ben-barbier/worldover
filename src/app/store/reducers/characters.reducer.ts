@@ -10,10 +10,20 @@ export const charactersReducer = createReducer(
     initialState,
     on(CharactersActions.addCharacter, (state, action) => [...state, action.character]),
     on(CharactersActions.moveCharacter, (state, action) => {
-        // TODO: remove one action point on character
         return state
+            // TODO: remove one action point on character
+            // .filter(c => c.name !== action.attacker.name)
+            // .concat({...action.attacker, actionPoints: action.target.actionPointss - 1});
             .filter(c => c.name !== action.character.name)
             .concat({...action.character, position: action.destination});
+    }),
+    on(CharactersActions.attackCharacter, (state, action) => {
+        return state
+            // TODO: remove one action point on character
+            // .filter(c => c.name !== action.attacker.name)
+            // .concat({...action.attacker, actionPoints: action.target.actionPointss - 1});
+            .filter(c => c.name !== action.target.name)
+            .concat({...action.target, healthPoints: action.target.healthPoints - 1});
     }),
     on(CharactersActions.updateAvailableActions, (state, action) => {
         const characterToUpdate = state.find(c => c.name === action.characterName);

@@ -12,6 +12,11 @@ export const moveCharacter = createAction(
     props<{ character: Character, destination: Position }>(),
 );
 
+export const attackCharacter = createAction(
+    '[Character] Attack',
+    props<{ attacker: Character, target: Character }>(),
+);
+
 export const updateAvailableActions = createAction(
     '[Character] Update available actions',
     props<{ characterName: string, availableActions: CharacterAction[] }>(),

@@ -26,28 +26,44 @@ export class CharacterService {
         const position = character.position;
         const characters: Character[] = this.state.getValue().characters;
 
-        return [
-            {target: this.arenaService.getSquare({x: position.x - 1, y: position.y}), type: ActionType.MOVE_LEFT},
-            {target: this.arenaService.getSquare({x: position.x, y: position.y - 1}), type: ActionType.MOVE_BOTTOM},
-            {target: this.arenaService.getSquare({x: position.x + 1, y: position.y}), type: ActionType.MOVE_RIGHT},
-            {target: this.arenaService.getSquare({x: position.x, y: position.y + 1}), type: ActionType.MOVE_UP},
+        const attackActions: CharacterAction[] = [
+            {source: position, target: {x: position.x, y: position.y + 1}, type: ActionType.ATTACK_UP},
+            {source: position, target: {x: position.x + 1, y: position.y}, type: ActionType.ATTACK_RIGHT},
+            {source: position, target: {x: position.x, y: position.y - 1}, type: ActionType.ATTACK_BOTTOM},
+            {source: position, target: {x: position.x - 1, y: position.y}, type: ActionType.ATTACK_LEFT},
         ]
-            .filter(e => character.healthPoints > 0)
-            .filter(e => this.squareExists(e.target))
-            .filter(e => this.squareIsFree(e.target, characters))
-            .filter(e => !e.target.collapsed)
-            .map(e => ({
-                type: e.type,
+            .filter(ca => character.healthPoints > 0)
+            .filter(ca => this.positionHasCharacter(ca.target, characters))
+            .filter(ca => this.getPositionCharacter(ca.target, characters).healthPoints);
+
+        const moveActions: CharacterAction[] = [
+            {target: this.arenaService.getSquare({x: position.x, y: position.y + 1}), type: ActionType.MOVE_UP},
+            {target: this.arenaService.getSquare({x: position.x + 1, y: position.y}), type: ActionType.MOVE_RIGHT},
+            {target: this.arenaService.getSquare({x: position.x, y: position.y - 1}), type: ActionType.MOVE_BOTTOM},
+            {target: this.arenaService.getSquare({x: position.x - 1, y: position.y}), type: ActionType.MOVE_LEFT},
+        ]
+            .filter(ca => character.healthPoints > 0)
+            .filter(ca => this.squareExists(ca.target))
+            .filter(ca => this.positionIsFree(ca.target.position, characters))
+            .filter(ca => !ca.target.collapsed)
+            .map(ca => ({
+                type: ca.type,
                 source: position,
-                target: e.target.position,
+                target: ca.target.position,
             }));
 
+        return [...attackActions, ...moveActions];
+
+    }
+
+    public getPositionCharacter(position: Position, characters: Character[]): Character {
+        return characters.find(c => Position.equals(c.position, position));
     }
 
     private getAvailableSquares(arena: Arena, characters: Character[]): Square[] {
         return arena.squares
             .filter(square => this.squareIsBorder(square, arena))
-            .filter(square => this.squareIsFree(square, characters))
+            .filter(square => this.positionIsFree(square.position, characters))
             .filter(square => this.adjacentSquaresAreFree(square, arena, characters));
     }
 
@@ -59,13 +75,17 @@ export class CharacterService {
         return !!square;
     }
 
-    private squareIsFree(square: Square, characters: Character[]) {
+    private positionIsFree(position: Position, characters: Character[]) {
         const usedPositions = characters.map(character => character.position);
-        return usedPositions.every(usedPosition => !Position.equals(usedPosition, square.position));
+        return usedPositions.every(usedPosition => !Position.equals(usedPosition, position));
+    }
+
+    private positionHasCharacter(position: Position, characters: Character[]): boolean {
+        return characters.some(c => Position.equals(c.position, position));
     }
 
     private adjacentSquaresAreFree(square, arena: Arena, characters: Character[]) {
-        return this.getAdjacentSquares(square.position, arena).every(adjacentSquare => this.squareIsFree(adjacentSquare, characters));
+        return this.getAdjacentSquares(square.position, arena).every(as => this.positionIsFree(as.position, characters));
     }
 
     private getAdjacentSquares(position: Position, arena: Arena): Square[] {

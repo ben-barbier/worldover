@@ -31,16 +31,30 @@ export class CharactersEffects {
         )
     );
 
-    $collapseArena = createEffect(() =>
+    collapseArena$ = createEffect(() =>
         this.actions.pipe(
             ofType(ArenaActions.collapseArena),
-            switchMap(action => {
+            switchMap(() => {
                 const characters: Character[] = this.state.getValue().characters;
                 return characters.map(character => CharactersActions.updateAvailableActions({
                     characterName: character.name,
                     availableActions: this.characterService.getAvailableActions(character),
                 }));
             })
+        )
+    );
+
+    attackCharacter = createEffect(() =>
+        this.actions.pipe(
+            ofType(CharactersActions.attackCharacter),
+            // TODO: externalize "refreshAllAvailableActions" (2 same calls)
+            switchMap(() => {
+                const characters: Character[] = this.state.getValue().characters;
+                return characters.map(character => CharactersActions.updateAvailableActions({
+                    characterName: character.name,
+                    availableActions: this.characterService.getAvailableActions(character),
+                }));
+            }),
         )
     );
 
