@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {State, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
 import {collapseArena} from '../store/actions/arena.actions';
@@ -15,6 +15,19 @@ import {CharacterService} from '../services/character.service';
 export class ActionsComponent {
 
     public actionType = ActionType;
+
+    @HostListener('window:keyup', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        if (event.key === 'ArrowUp') {
+            this.executeAvailableAction([ActionType.MOVE_UP, ActionType.ATTACK_UP]);
+        } else if (event.key === 'ArrowRight') {
+            this.executeAvailableAction([ActionType.MOVE_RIGHT, ActionType.ATTACK_RIGHT]);
+        } else if (event.key === 'ArrowDown') {
+            this.executeAvailableAction([ActionType.MOVE_BOTTOM, ActionType.ATTACK_BOTTOM]);
+        } else if (event.key === 'ArrowLeft') {
+            this.executeAvailableAction([ActionType.MOVE_LEFT, ActionType.ATTACK_LEFT]);
+        }
+    }
 
     constructor(private store: Store<AppState>,
                 private state: State<AppState>,
@@ -66,6 +79,13 @@ export class ActionsComponent {
                 target: this.characterService.getPositionCharacter(action.target, characters),
             }));
         }
-
     }
+
+    private executeAvailableAction(actions: ActionType[]) {
+        const actionToExecute = actions.find(action => this.hasAction(action));
+        if (actionToExecute !== undefined) {
+            this.executeAction(actionToExecute);
+        }
+    }
+
 }
