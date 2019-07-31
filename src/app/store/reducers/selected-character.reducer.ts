@@ -11,7 +11,7 @@ export const selectedCharacterReducer = createReducer(
     on(SelectedCharacterActions.selectCharacter, (state, action) => action.character),
     on(CharactersActions.moveCharacter, (state, action) => ({...action.character, position: action.destination})),
     on(CharactersActions.updateAvailableActions, (state, action) => {
-        if (action.characterName === state.name) {
+        if (state && action.characterName === state.name) {
             return {...state, availableActions: action.availableActions};
         }
         return state;
