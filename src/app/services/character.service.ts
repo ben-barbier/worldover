@@ -22,11 +22,15 @@ export class CharacterService {
     }
 
     public getAvailableActions(character: Character): CharacterAction[] {
-
         const position = character.position;
         const characters: Character[] = this.state.getValue().characters;
+        const attackActions: CharacterAction[] = this.getAttackActions(position, character, characters);
+        const moveActions: CharacterAction[] = this.getMoveActions(position, character, characters);
+        return [...attackActions, ...moveActions];
+    }
 
-        const attackActions: CharacterAction[] = [
+    private getAttackActions(position, character: Character, characters: Character[]) {
+        return [
             {source: position, target: {x: position.x, y: position.y + 1}, type: ActionType.ATTACK_UP},
             {source: position, target: {x: position.x + 1, y: position.y}, type: ActionType.ATTACK_RIGHT},
             {source: position, target: {x: position.x, y: position.y - 1}, type: ActionType.ATTACK_BOTTOM},
@@ -35,8 +39,10 @@ export class CharacterService {
             .filter(ca => character.healthPoints > 0)
             .filter(ca => this.positionHasCharacter(ca.target, characters))
             .filter(ca => this.getPositionCharacter(ca.target, characters).healthPoints);
+    }
 
-        const moveActions: CharacterAction[] = [
+    private getMoveActions(position, character: Character, characters: Character[]) {
+        return [
             {target: this.arenaService.getSquare({x: position.x, y: position.y + 1}), type: ActionType.MOVE_UP},
             {target: this.arenaService.getSquare({x: position.x + 1, y: position.y}), type: ActionType.MOVE_RIGHT},
             {target: this.arenaService.getSquare({x: position.x, y: position.y - 1}), type: ActionType.MOVE_BOTTOM},
@@ -51,9 +57,6 @@ export class CharacterService {
                 source: position,
                 target: ca.target.position,
             }));
-
-        return [...attackActions, ...moveActions];
-
     }
 
     public getPositionCharacter(position: Position, characters: Character[]): Character {
