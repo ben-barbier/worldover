@@ -36,7 +36,8 @@ export class CharacterService {
             {source: position, target: {x: position.x, y: position.y - 1}, type: ActionType.ATTACK_BOTTOM},
             {source: position, target: {x: position.x - 1, y: position.y}, type: ActionType.ATTACK_LEFT},
         ]
-            .filter(ca => character.healthPoints > 0)
+            .filter(() => character.healthPoints > 0)
+            .filter(() => character.actionPoints > 0)
             .filter(ca => this.positionHasCharacter(ca.target, characters))
             .filter(ca => this.getPositionCharacter(ca.target, characters).healthPoints);
     }
@@ -48,7 +49,8 @@ export class CharacterService {
             {target: this.arenaService.getSquare({x: position.x, y: position.y - 1}), type: ActionType.MOVE_BOTTOM},
             {target: this.arenaService.getSquare({x: position.x - 1, y: position.y}), type: ActionType.MOVE_LEFT},
         ]
-            .filter(ca => character.healthPoints > 0)
+            .filter(() => character.healthPoints > 0)
+            .filter(() => character.actionPoints > 0)
             .filter(ca => this.squareExists(ca.target))
             .filter(ca => this.positionIsFree(ca.target.position, characters))
             .filter(ca => !ca.target.collapsed)

@@ -1,16 +1,10 @@
-:host {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 mat-grid-list {
     margin-left: auto;
     margin-right: auto;
     padding-bottom: 0 !important;
 }
 
-$actions-height: 175px;
+$actions-height: 215px;
 
 @media (orientation: landscape) {
     mat-grid-list {

@@ -1,0 +1,18 @@
+<fieldset *ngIf="character">
+    <legend>{{ character.name }}</legend>
+    <section>
+        <img [src]="'assets/characters/heads/' + character.photo + '.png'"/>
+        <div class="status">
+            <div>
+                Santé :
+                <app-health-points
+                    [healthPoints]="character.healthPoints"
+                    [healthPointsTotal]="character.healthPointsTotal"
+                ></app-health-points>
+            </div>
+            <div>
+                Actions : {{ character.actionPoints }}
+            </div>
+        </div>
+    </section>
+</fieldset>

@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    justify-content: center;
+}
+
+section {
+    display: flex;
+    flex-direction: row;
+    img {
+        max-height: 3em;
+        margin-right: 1em;
+    }
+}
+
+.status {
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden {
+    visibility: hidden;
+}

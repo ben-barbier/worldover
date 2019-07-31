@@ -5,6 +5,7 @@ export class Character {
     photo: number;
     healthPoints: number;
     healthPointsTotal: number;
+    actionPoints: number;
     availableActions: CharacterAction[] = [];
     position: Position;
 }

@@ -18,6 +18,7 @@ import {MatRippleModule} from '@angular/material/core';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {EffectsModule} from '@ngrx/effects';
 import {CharactersEffects} from './store/effects/characters.effects';
+import { CharacterStatusComponent } from './character-status/character-status.component';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import {CharactersEffects} from './store/effects/characters.effects';
         CharacterComponent,
         HealthPointsComponent,
         ActionsComponent,
+        CharacterStatusComponent,
     ],
     imports: [
         BrowserModule,
