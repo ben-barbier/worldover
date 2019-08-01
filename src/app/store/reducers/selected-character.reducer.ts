@@ -1,13 +1,15 @@
-import * as SelectedCharacterActions from '../actions/selected-character.actions';
 import {Action, createReducer, on} from '@ngrx/store';
 import {Character} from '../models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
+import * as SelectedCharacterActions from '../actions/selected-character.actions';
+import * as GameActions from '../actions/game.actions';
 
 export const initialState: Character = null;
 
 export const selectedCharacterReducer = createReducer(
     initialState,
     on(SelectedCharacterActions.selectCharacter, (state, action) => action.character),
+    on(GameActions.goToTheNextRound, (state, action) => null),
     on(CharactersActions.moveCharacter, (state, action) => ({
         ...action.character,
         position: action.destination,

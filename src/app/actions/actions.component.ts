@@ -6,6 +6,7 @@ import {ArenaService} from '../services/arena.service';
 import {ActionType, Character} from '../store/models/character.model';
 import {attackCharacter, moveCharacter} from '../store/actions/characters.actions';
 import {CharacterService} from '../services/character.service';
+import {goToTheNextRound} from '../store/actions/game.actions';
 
 @Component({
     selector: 'app-actions',
@@ -79,6 +80,10 @@ export class ActionsComponent {
                 target: this.characterService.getPositionCharacter(action.target, characters),
             }));
         }
+    }
+
+    public validateActions() {
+        this.store.dispatch(goToTheNextRound());
     }
 
     private executeAvailableAction(actions: ActionType[]) {

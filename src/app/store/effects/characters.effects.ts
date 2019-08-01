@@ -2,14 +2,23 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {CharacterService} from '../../services/character.service';
 import {switchMap} from 'rxjs/operators';
-import * as CharactersActions from '../actions/characters.actions';
-import * as ArenaActions from '../actions/arena.actions';
 import {AppState} from '../app.state';
 import {State} from '@ngrx/store';
 import {Character} from '../models/character.model';
+import * as CharactersActions from '../actions/characters.actions';
+import * as ArenaActions from '../actions/arena.actions';
+import * as GameActions from '../actions/game.actions';
 
 @Injectable()
 export class CharactersEffects {
+
+    private refreshAllAvailableActions = (() => {
+        const characters: Character[] = this.state.getValue().characters;
+        return characters.map(character => CharactersActions.updateAvailableActions({
+            characterName: character.name,
+            availableActions: this.characterService.getAvailableActions(character),
+        }));
+    });
 
     moveCharacter$ = createEffect(() =>
         this.actions.pipe(
@@ -19,7 +28,11 @@ export class CharactersEffects {
                 return [
                     CharactersActions.updateAvailableActions({
                         characterName: action.character.name,
-                        availableActions: this.characterService.getAvailableActions({...action.character, position: action.destination}),
+                        availableActions: this.characterService.getAvailableActions({
+                            ...action.character,
+                            position: action.destination,
+                            actionPoints: action.character.actionPoints - 1
+                        }),
                     }),
                     ...otherCharacters.map(oc => CharactersActions.updateAvailableActions({
                             characterName: oc.name,
@@ -34,27 +47,21 @@ export class CharactersEffects {
     collapseArena$ = createEffect(() =>
         this.actions.pipe(
             ofType(ArenaActions.collapseArena),
-            switchMap(() => {
-                const characters: Character[] = this.state.getValue().characters;
-                return characters.map(character => CharactersActions.updateAvailableActions({
-                    characterName: character.name,
-                    availableActions: this.characterService.getAvailableActions(character),
-                }));
-            })
+            switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );
 
-    attackCharacter = createEffect(() =>
+    attackCharacter$ = createEffect(() =>
         this.actions.pipe(
             ofType(CharactersActions.attackCharacter),
-            // TODO: externalize "refreshAllAvailableActions" (2 same calls)
-            switchMap(() => {
-                const characters: Character[] = this.state.getValue().characters;
-                return characters.map(character => CharactersActions.updateAvailableActions({
-                    characterName: character.name,
-                    availableActions: this.characterService.getAvailableActions(character),
-                }));
-            }),
+            switchMap(this.refreshAllAvailableActions.bind(this)),
+        )
+    );
+
+    goToTheNextRound$ = createEffect(() =>
+        this.actions.pipe(
+            ofType(GameActions.goToTheNextRound),
+            switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );
 

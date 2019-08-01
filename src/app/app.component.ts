@@ -7,6 +7,7 @@ import {CharacterService} from './services/character.service';
 import {ArenaService} from './services/arena.service';
 import {Character} from './store/models/character.model';
 import {Position} from './store/models/position.model';
+import {Game} from './store/models/game.model';
 
 @Component({
     selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent {
                 private characterService: CharacterService,
                 private arenaService: ArenaService) {
 
+        const game: Game = {round: 1};
         const arena = arenaService.generateArena(5, 5);
         store.dispatch(initArena({arena}));
 
