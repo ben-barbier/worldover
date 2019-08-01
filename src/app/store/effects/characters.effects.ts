@@ -31,7 +31,7 @@ export class CharactersEffects {
                         availableActions: this.characterService.getAvailableActions({
                             ...action.character,
                             position: action.destination,
-                            actionPoints: action.character.actionPoints - 1
+                            actionPoints: action.character.actionPoints - 1,
                         }),
                     }),
                     ...otherCharacters.map(oc => CharactersActions.updateAvailableActions({
@@ -60,7 +60,7 @@ export class CharactersEffects {
 
     goToTheNextRound$ = createEffect(() =>
         this.actions.pipe(
-            ofType(GameActions.goToTheNextRound),
+            ofType(GameActions.updateRound),
             switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );

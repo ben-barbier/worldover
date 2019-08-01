@@ -8,7 +8,7 @@ export const initialState: Game = {
 
 export const gameReducer = createReducer(
     initialState,
-    on(GameActions.goToTheNextRound, (state, action): Game => ({...state, round: state.round + 1})),
+    on(GameActions.updateRound, (state, action): Game => ({...state, round: state.round + 1})),
 );
 
 export function reducer(state: Game | undefined, action: Action) {

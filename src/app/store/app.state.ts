@@ -8,3 +8,8 @@ export interface AppState {
     selectedCharacter: Character;
     game: Game;
 }
+
+export const arenaSelector = (state: AppState) => state.arena;
+export const charactersSelector = (state: AppState) => state.characters;
+export const gameSelector = (state: AppState) => state.game;
+export const selectedCharacterSelector = (state: AppState) => state.selectedCharacter;

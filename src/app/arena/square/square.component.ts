@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../store/app.state';
+import {AppState, charactersSelector, selectedCharacterSelector} from '../../store/app.state';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {Square} from '../../store/models/square.model';
@@ -26,13 +26,13 @@ export class SquareComponent implements OnInit {
 
     ngOnInit(): void {
         this.selected = this.store.pipe(
-            select('selectedCharacter'),
+            select(selectedCharacterSelector),
             filter(c => !!c),
             map((selectedCharacter: Character): boolean => Position.equals(selectedCharacter.position, this.square.position)),
         );
 
         this.store.pipe(
-            select('characters'),
+            select(charactersSelector),
         ).subscribe((characters: Character[]) => {
             const characterOnSquare = characters.find(character => Position.equals(character.position, this.square.position));
             this.character = characterOnSquare ? characterOnSquare : null;

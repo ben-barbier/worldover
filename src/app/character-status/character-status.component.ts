@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
+import {AppState, selectedCharacterSelector} from '../store/app.state';
 import {Character} from '../store/models/character.model';
 
 @Component({
@@ -14,7 +14,7 @@ export class CharacterStatusComponent {
 
     constructor(private store: Store<AppState>) {
         this.store.pipe(
-            select('selectedCharacter'),
+            select(selectedCharacterSelector),
         ).subscribe(c => this.character = c);
     }
 

@@ -53,7 +53,7 @@ export const charactersReducer = createReducer(
         });
 
     }),
-    on(GameActions.goToTheNextRound, (state, action) => {
+    on(GameActions.updateRound, (state, action) => {
         return [...state].map(c => ({...c, actionPoints: c.healthPoints}));
     }),
 );

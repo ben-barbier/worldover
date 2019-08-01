@@ -1,5 +1,6 @@
-import {createAction} from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 
-export const goToTheNextRound = createAction(
-    '[Game] Go to the next round',
+export const updateRound = createAction(
+    '[Game] Update round',
+    props<{ round: number }>(),
 );

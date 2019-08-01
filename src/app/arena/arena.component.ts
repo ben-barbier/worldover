@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
+import {AppState, arenaSelector} from '../store/app.state';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {sortBy as _sortBy} from 'lodash';
@@ -14,7 +14,7 @@ import {Arena} from '../store/models/arena.model';
 export class ArenaComponent {
 
     public arena: Observable<Arena> = this.store.pipe(
-        select('arena'),
+        select(arenaSelector),
         map(ArenaComponent.orderSquares),
     );
 

@@ -1,6 +1,6 @@
-import * as ArenaActions from '../actions/arena.actions';
 import {Action, createReducer, on} from '@ngrx/store';
 import {Arena} from '../models/arena.model';
+import * as ArenaActions from '../actions/arena.actions';
 
 export const initialState: Arena = {
     height: 0,

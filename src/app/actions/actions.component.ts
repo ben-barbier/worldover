@@ -6,7 +6,7 @@ import {ArenaService} from '../services/arena.service';
 import {ActionType, Character} from '../store/models/character.model';
 import {attackCharacter, moveCharacter} from '../store/actions/characters.actions';
 import {CharacterService} from '../services/character.service';
-import {goToTheNextRound} from '../store/actions/game.actions';
+import {GameService} from '../services/game.service';
 
 @Component({
     selector: 'app-actions',
@@ -33,7 +33,8 @@ export class ActionsComponent {
     constructor(private store: Store<AppState>,
                 private state: State<AppState>,
                 private arenaService: ArenaService,
-                private characterService: CharacterService) {
+                private characterService: CharacterService,
+                private gameService: GameService) {
     }
 
     public collapse(): void {
@@ -83,7 +84,7 @@ export class ActionsComponent {
     }
 
     public validateActions() {
-        this.store.dispatch(goToTheNextRound());
+        this.gameService.goToTheNextRound();
     }
 
     private executeAvailableAction(actions: ActionType[]) {

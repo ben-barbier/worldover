@@ -9,7 +9,7 @@ export const initialState: Character = null;
 export const selectedCharacterReducer = createReducer(
     initialState,
     on(SelectedCharacterActions.selectCharacter, (state, action) => action.character),
-    on(GameActions.goToTheNextRound, (state, action) => null),
+    on(GameActions.updateRound, (state, action) => null),
     on(CharactersActions.moveCharacter, (state, action) => ({
         ...action.character,
         position: action.destination,
