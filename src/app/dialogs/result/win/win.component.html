@@ -1,0 +1,9 @@
+<h2>And the winner is...</h2>
+
+<img [src]="'assets/characters/heads/' + data.winner.photo + '.png'" alt="">
+
+<h1>🎉 {{ data.winner.name }} 🎉</h1>
+
+<button mat-raised-button color="primary" (click)="reset()">
+    <mat-icon>refresh</mat-icon>
+</button>

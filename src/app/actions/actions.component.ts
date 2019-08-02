@@ -36,12 +36,6 @@ export class ActionsComponent {
                 private gameService: GameService) {
     }
 
-    public reset(): void {
-        if (confirm('Êtes-vous sûrs de vouloir recommencer la partie ?')) {
-            document.location.reload();
-        }
-    }
-
     public hasAction(actionType: ActionType): boolean {
         const selectedCharacter = this.state.getValue().selectedCharacter;
         if (selectedCharacter) {

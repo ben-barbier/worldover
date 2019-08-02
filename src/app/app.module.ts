@@ -23,6 +23,9 @@ import {ArenaEffects} from './store/effects/arena.effects';
 import {GameStatusComponent} from './game-status/game-status.component';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material';
+import {WinComponent} from './dialogs/result/win/win.component';
+import {ExaequoComponent} from './dialogs/result/exaequo/exaequo.component';
 
 @NgModule({
     declarations: [
@@ -34,6 +37,8 @@ import {environment} from '../environments/environment';
         ActionsComponent,
         CharacterStatusComponent,
         GameStatusComponent,
+        WinComponent,
+        ExaequoComponent,
     ],
     imports: [
         BrowserModule,
@@ -42,6 +47,7 @@ import {environment} from '../environments/environment';
         MatButtonModule,
         MatRippleModule,
         MatGridListModule,
+        MatDialogModule,
         StoreModule.forRoot({
             arena: fromArena.reducer,
             characters: fromCharacters.reducer,
@@ -64,8 +70,14 @@ import {environment} from '../environments/environment';
         //     maxAge: 10
         // }),
     ],
-    providers: [],
-    bootstrap: [AppComponent]
+    providers: [
+        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {disableClose: true, hasBackdrop: true}}
+    ],
+    bootstrap: [AppComponent],
+    entryComponents: [
+        ExaequoComponent,
+        WinComponent,
+    ]
 })
 export class AppModule {
 }
