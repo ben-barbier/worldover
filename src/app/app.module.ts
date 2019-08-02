@@ -21,6 +21,8 @@ import {CharactersEffects} from './store/effects/characters.effects';
 import {CharacterStatusComponent} from './character-status/character-status.component';
 import {ArenaEffects} from './store/effects/arena.effects';
 import {GameStatusComponent} from './game-status/game-status.component';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 @NgModule({
     declarations: [
@@ -55,6 +57,7 @@ import {GameStatusComponent} from './game-status/game-status.component';
             CharactersEffects,
             ArenaEffects,
         ]),
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
         // FIXME: https://github.com/ngrx/platform/issues/1054 (Effect gets called twice when using StoreDevtoolsModule.instrument())
         // FIXME: Solution => do not use ☠State<AppState>☠ in application ️
         // StoreDevtoolsModule.instrument({
