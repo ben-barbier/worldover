@@ -11,7 +11,6 @@
         <button mat-raised-button color="warn" *ngIf="hasAction(actionType.ATTACK_LEFT)" (click)="executeAction(actionType.ATTACK_LEFT)" [disabled]="!hasAction(actionType.ATTACK_LEFT)">⚔️<mat-icon>arrow_back</mat-icon></button>
         <br />
         <br />
-        <button mat-raised-button (click)="collapse()"><mat-icon>select_all</mat-icon></button>
         <button mat-raised-button (click)="reset()"><mat-icon>refresh</mat-icon></button>
         <button mat-raised-button (click)="validateActions()"><mat-icon>send</mat-icon></button>
     </div>

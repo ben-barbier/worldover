@@ -1,7 +1,6 @@
 import {Component, HostListener} from '@angular/core';
 import {State, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
-import {collapseArena} from '../store/actions/arena.actions';
 import {ArenaService} from '../services/arena.service';
 import {ActionType, Character} from '../store/models/character.model';
 import {attackCharacter, moveCharacter} from '../store/actions/characters.actions';
@@ -35,11 +34,6 @@ export class ActionsComponent {
                 private arenaService: ArenaService,
                 private characterService: CharacterService,
                 private gameService: GameService) {
-    }
-
-    public collapse(): void {
-        const collapsedArena = this.arenaService.collapseArena(this.state.getValue().arena);
-        this.store.dispatch(collapseArena({collapsedArena}));
     }
 
     public reset(): void {
