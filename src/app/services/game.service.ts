@@ -1,19 +1,24 @@
 import {Injectable} from '@angular/core';
-import {State, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
+import {select, Store} from '@ngrx/store';
+import {AppState, gameSelector} from '../store/app.state';
 import {updateRound} from '../store/actions/game.actions';
+import {first, map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GameService {
 
-    constructor(private state: State<AppState>,
-                private store: Store<AppState>) {
+    constructor(private store: Store<AppState>) {
     }
 
     public goToTheNextRound(): void {
-        const nextRound = this.state.getValue().game.round + 1;
-        this.store.dispatch(updateRound({round: nextRound}));
+        this.store.pipe(
+            select(gameSelector),
+            first(),
+            map(game => game.round + 1),
+        ).subscribe(nextRound => {
+            this.store.dispatch(updateRound({round: nextRound}));
+        });
     }
 }

@@ -31,7 +31,6 @@ export class ArenaEffects {
     );
 
     constructor(private actions: Actions,
-                private state: State<AppState>,
                 private store: Store<AppState>,
                 private characterService: CharacterService,
                 private arenaService: ArenaService) {

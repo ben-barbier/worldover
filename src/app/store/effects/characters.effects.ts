@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {CharacterService} from '../../services/character.service';
-import {switchMap} from 'rxjs/operators';
-import {AppState} from '../app.state';
-import {State} from '@ngrx/store';
+import {concatMap, first, map, mergeMap, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {AppState, arenaSelector, charactersSelector} from '../app.state';
+import {select, State, Store} from '@ngrx/store';
 import {Character} from '../models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
 import * as ArenaActions from '../actions/arena.actions';
 import * as GameActions from '../actions/game.actions';
+import {of} from 'rxjs';
 
 @Injectable()
 export class CharactersEffects {
 
-    private refreshAllAvailableActions = (() => {
-        const characters: Character[] = this.state.getValue().characters;
+    private refreshAllAvailableActions = ((characters: Character[]) => {
         return characters.map(character => CharactersActions.updateAvailableActions({
             characterName: character.name,
             availableActions: this.characterService.getAvailableActions(character),
@@ -23,8 +23,11 @@ export class CharactersEffects {
     moveCharacter$ = createEffect(() =>
         this.actions.pipe(
             ofType(CharactersActions.moveCharacter),
-            switchMap(action => {
-                const otherCharacters = this.state.getValue().characters.filter(c => c.name !== action.character.name);
+            concatMap(action => of(action).pipe(
+                withLatestFrom(this.store.pipe(select(charactersSelector)))
+            )),
+            switchMap(([action, characters]) => {
+                const otherCharacters = characters.filter(c => c.name !== action.character.name);
                 return [
                     CharactersActions.updateAvailableActions({
                         characterName: action.character.name,
@@ -47,6 +50,8 @@ export class CharactersEffects {
     collapseArena$ = createEffect(() =>
         this.actions.pipe(
             ofType(ArenaActions.collapseArena),
+            mergeMap(() => this.store.pipe(select(charactersSelector))),
+            first(),
             switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );
@@ -54,6 +59,8 @@ export class CharactersEffects {
     attackCharacter$ = createEffect(() =>
         this.actions.pipe(
             ofType(CharactersActions.attackCharacter),
+            mergeMap(() => this.store.pipe(select(charactersSelector))),
+            first(),
             switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );
@@ -61,12 +68,14 @@ export class CharactersEffects {
     goToTheNextRound$ = createEffect(() =>
         this.actions.pipe(
             ofType(GameActions.updateRound),
+            mergeMap(() => this.store.pipe(select(charactersSelector))),
+            first(),
             switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );
 
     constructor(private actions: Actions,
-                private state: State<AppState>,
+                private store: Store<AppState>,
                 private characterService: CharacterService) {
     }
 

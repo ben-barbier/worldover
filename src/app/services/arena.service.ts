@@ -2,15 +2,17 @@ import {Injectable} from '@angular/core';
 import {Arena} from '../store/models/arena.model';
 import {Square} from '../store/models/square.model';
 import {Position} from '../store/models/position.model';
-import {State} from '@ngrx/store';
-import {AppState} from '../store/app.state';
+import {select, Store} from '@ngrx/store';
+import {AppState, arenaSelector} from '../store/app.state';
+import {find, first, flatMap, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ArenaService {
 
-    constructor(private state: State<AppState>) {
+    constructor(private store: Store<AppState>) {
     }
 
     public generateArena(height: number, width: number): Arena {
@@ -46,8 +48,14 @@ export class ArenaService {
         });
     }
 
-    public getSquare(position: Position): Square {
-        return this.state.getValue().arena.squares.find(square => Position.equals(square.position, position));
+    public getSquare(position: Position): Observable<Square> {
+        return this.store.pipe(
+            select(arenaSelector),
+            first(), // TODO: obligatoire ?
+            map(a => a.squares),
+            flatMap(e => e),
+            find((square: Square) => Position.equals(square.position, position)), // TODO: Que retourne un find si rien ne match ?
+        );
     }
 
 }

@@ -1,11 +1,13 @@
 import {Component, HostListener} from '@angular/core';
-import {State, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
+import {select, Store} from '@ngrx/store';
 import {ArenaService} from '../services/arena.service';
-import {ActionType, Character} from '../store/models/character.model';
+import {ActionType} from '../store/models/character.model';
 import {attackCharacter, moveCharacter} from '../store/actions/characters.actions';
 import {CharacterService} from '../services/character.service';
 import {GameService} from '../services/game.service';
+import {first, map} from 'rxjs/operators';
+import {forkJoin, Observable} from 'rxjs';
+import {AppState, charactersSelector, selectedCharacterSelector} from '../store/app.state';
 
 @Component({
     selector: 'app-actions',
@@ -30,7 +32,6 @@ export class ActionsComponent {
     }
 
     constructor(private store: Store<AppState>,
-                private state: State<AppState>,
                 private arenaService: ArenaService,
                 private characterService: CharacterService,
                 private gameService: GameService) {
@@ -42,41 +43,52 @@ export class ActionsComponent {
         }
     }
 
-    public hasAction(actionType: ActionType): boolean {
-        const selectedCharacter = this.state.getValue().selectedCharacter;
-        if (selectedCharacter) {
-            return selectedCharacter.availableActions.some(action => action.type === actionType);
-        }
-        return false;
+    public hasAction(actionType: ActionType): Observable<boolean> {
+        return this.store.pipe(
+            select(selectedCharacterSelector),
+            first(),
+            map(selectedCharacter => {
+                if (selectedCharacter) {
+                    return selectedCharacter.availableActions.some(action => action.type === actionType);
+                }
+                return false;
+            })
+        );
     }
 
     public executeAction(actionType: ActionType) {
-        const selectedCharacter: Character = this.state.getValue().selectedCharacter;
-        const characters: Character[] = this.state.getValue().characters;
-        const action = selectedCharacter.availableActions.find(a => a.type === actionType);
+        // TODO: le forkJoin fonctionne ???
+        forkJoin([
+            this.store.select(selectedCharacterSelector),
+            this.store.select(charactersSelector),
+        ]).pipe(
+            first(),
+        ).subscribe(([selectedCharacter, characters]) => {
+            debugger;
+            const action = selectedCharacter.availableActions.find(a => a.type === actionType);
+            if ([ActionType.MOVE_UP,
+                ActionType.MOVE_RIGHT,
+                ActionType.MOVE_BOTTOM,
+                ActionType.MOVE_LEFT,
+            ].includes(actionType)) {
+                this.store.dispatch(moveCharacter({
+                    character: selectedCharacter,
+                    destination: action.target,
+                }));
+            }
 
-        if ([ActionType.MOVE_UP,
-            ActionType.MOVE_RIGHT,
-            ActionType.MOVE_BOTTOM,
-            ActionType.MOVE_LEFT,
-        ].includes(actionType)) {
-            this.store.dispatch(moveCharacter({
-                character: selectedCharacter,
-                destination: action.target,
-            }));
-        }
-
-        if ([
-            ActionType.ATTACK_UP,
-            ActionType.ATTACK_RIGHT,
-            ActionType.ATTACK_BOTTOM,
-            ActionType.ATTACK_LEFT,
-        ].includes(actionType)) {
-            this.store.dispatch(attackCharacter({
-                attacker: selectedCharacter,
-                target: this.characterService.getPositionCharacter(action.target, characters),
-            }));
-        }
+            if ([
+                ActionType.ATTACK_UP,
+                ActionType.ATTACK_RIGHT,
+                ActionType.ATTACK_BOTTOM,
+                ActionType.ATTACK_LEFT,
+            ].includes(actionType)) {
+                this.store.dispatch(attackCharacter({
+                    attacker: selectedCharacter,
+                    target: this.characterService.getPositionCharacter(action.target, characters),
+                }));
+            }
+        });
     }
 
     public validateActions() {
@@ -84,10 +96,11 @@ export class ActionsComponent {
     }
 
     private executeAvailableAction(actions: ActionType[]) {
-        const actionToExecute = actions.find(action => this.hasAction(action));
-        if (actionToExecute !== undefined) {
-            this.executeAction(actionToExecute);
-        }
+        // FIXME: update...
+        // const actionToExecute = actions.find(action => this.hasAction(action));
+        // if (actionToExecute !== undefined) {
+        //     this.executeAction(actionToExecute);
+        // }
     }
 
 }

@@ -4,8 +4,10 @@ import {Arena} from '../store/models/arena.model';
 import {ActionType, Character, CharacterAction} from '../store/models/character.model';
 import {Square} from '../store/models/square.model';
 import {ArenaService} from './arena.service';
-import {State} from '@ngrx/store';
-import {AppState} from '../store/app.state';
+import {Store} from '@ngrx/store';
+import {AppState, charactersSelector} from '../store/app.state';
+import {forkJoin, from, Observable, of} from 'rxjs';
+import {concatMap, filter, flatMap, map, tap, toArray, withLatestFrom} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +15,7 @@ import {AppState} from '../store/app.state';
 export class CharacterService {
 
     constructor(private arenaService: ArenaService,
-                private state: State<AppState>) {
+                private store: Store<AppState>) {
     }
 
     public getRandomAvailablePosition(arena: Arena, characters: Character[]): Position {
@@ -21,12 +23,15 @@ export class CharacterService {
         return availableSquares[Math.floor(Math.random() * availableSquares.length)].position;
     }
 
-    public getAvailableActions(character: Character): CharacterAction[] {
+    public getAvailableActions(character: Character): Observable<CharacterAction[]> {
+        this.store.
         const position = character.position;
-        const characters: Character[] = this.state.getValue().characters;
-        const attackActions: CharacterAction[] = this.getAttackActions(position, character, characters);
-        const moveActions: CharacterAction[] = this.getMoveActions(position, character, characters);
-        return [...attackActions, ...moveActions];
+        const characters$: Observable<Character[]> = this.store.select(charactersSelector);
+        const attackActions$: Observable<CharacterAction[]> = this.getAttackActions(position, character, characters$);
+        const moveActions$: Observable<CharacterAction[]> = this.getMoveActions(position, character, characters$);
+        return forkJoin([attackActions$, moveActions$]).pipe(
+            flatMap(e => e),
+        );
     }
 
     private getAttackActions(position, character: Character, characters: Character[]) {
@@ -42,23 +47,21 @@ export class CharacterService {
             .filter(ca => this.getPositionCharacter(ca.target, characters).healthPoints);
     }
 
-    private getMoveActions(position, character: Character, characters: Character[]) {
-        return [
-            {target: this.arenaService.getSquare({x: position.x, y: position.y + 1}), type: ActionType.MOVE_UP},
-            {target: this.arenaService.getSquare({x: position.x + 1, y: position.y}), type: ActionType.MOVE_RIGHT},
-            {target: this.arenaService.getSquare({x: position.x, y: position.y - 1}), type: ActionType.MOVE_BOTTOM},
-            {target: this.arenaService.getSquare({x: position.x - 1, y: position.y}), type: ActionType.MOVE_LEFT},
-        ]
-            .filter(() => character.healthPoints > 0)
-            .filter(() => character.actionPoints > 0)
-            .filter(ca => this.squareExists(ca.target))
-            .filter(ca => this.positionIsFree(ca.target.position, characters))
-            .filter(ca => !ca.target.collapsed)
-            .map(ca => ({
-                type: ca.type,
-                source: position,
-                target: ca.target.position,
-            }));
+    private getMoveActions(position: Position, character: Character, characters: Character[]): Observable<CharacterAction> {
+        return from([
+            {target$: this.arenaService.getSquare({x: position.x, y: position.y + 1}), type: ActionType.MOVE_UP},
+            {target$: this.arenaService.getSquare({x: position.x + 1, y: position.y}), type: ActionType.MOVE_RIGHT},
+            {target$: this.arenaService.getSquare({x: position.x, y: position.y - 1}), type: ActionType.MOVE_BOTTOM},
+            {target$: this.arenaService.getSquare({x: position.x - 1, y: position.y}), type: ActionType.MOVE_LEFT},
+        ]).pipe(
+            filter(() => character.healthPoints > 0),
+            filter(() => character.actionPoints > 0),
+            concatMap(ca => of(ca).pipe(withLatestFrom(ca.target$))),
+            filter(([ca, target]) => this.squareExists(target)), // TODO: utile ?
+            filter(([ca, target]) => !target.collapsed),
+            filter(([ca, target]) => this.positionIsFree(target.position, characters)),
+            map(([ca, target]) => ({type: ca.type, source: position, target: target.position})),
+        );
     }
 
     public getPositionCharacter(position: Position, characters: Character[]): Character {
