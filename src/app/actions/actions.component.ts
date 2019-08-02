@@ -37,7 +37,9 @@ export class ActionsComponent {
     }
 
     public reset(): void {
-        document.location.reload();
+        if (confirm('Êtes-vous sûrs de vouloir recommencer la partie ?')) {
+            document.location.reload();
+        }
     }
 
     public hasAction(actionType: ActionType): boolean {
