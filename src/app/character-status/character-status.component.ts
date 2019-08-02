@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState, selectedCharacterSelector} from '../store/app.state';
 import {Character} from '../store/models/character.model';
+import {GameService} from '../services/game.service';
 
 @Component({
     selector: 'app-character-status',
@@ -12,10 +13,15 @@ export class CharacterStatusComponent {
 
     public character: Character;
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>,
+                private gameService: GameService) {
         this.store.pipe(
             select(selectedCharacterSelector),
         ).subscribe(c => this.character = c);
+    }
+
+    public validateActions() {
+        this.gameService.goToTheNextRound();
     }
 
 }

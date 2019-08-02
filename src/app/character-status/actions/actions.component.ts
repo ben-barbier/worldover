@@ -1,11 +1,10 @@
 import {Component, HostListener} from '@angular/core';
 import {State, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
-import {ArenaService} from '../services/arena.service';
-import {ActionType, Character} from '../store/models/character.model';
-import {attackCharacter, moveCharacter} from '../store/actions/characters.actions';
-import {CharacterService} from '../services/character.service';
-import {GameService} from '../services/game.service';
+import {AppState} from '../../store/app.state';
+import {ArenaService} from '../../services/arena.service';
+import {ActionType, Character} from '../../store/models/character.model';
+import {attackCharacter, moveCharacter} from '../../store/actions/characters.actions';
+import {CharacterService} from '../../services/character.service';
 
 @Component({
     selector: 'app-actions',
@@ -32,8 +31,7 @@ export class ActionsComponent {
     constructor(private store: Store<AppState>,
                 private state: State<AppState>,
                 private arenaService: ArenaService,
-                private characterService: CharacterService,
-                private gameService: GameService) {
+                private characterService: CharacterService) {
     }
 
     public hasAction(actionType: ActionType): boolean {
@@ -71,10 +69,6 @@ export class ActionsComponent {
                 target: this.characterService.getPositionCharacter(action.target, characters),
             }));
         }
-    }
-
-    public validateActions() {
-        this.gameService.goToTheNextRound();
     }
 
     private executeAvailableAction(actions: ActionType[]) {
