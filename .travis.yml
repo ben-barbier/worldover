@@ -4,9 +4,10 @@ node_js:
 script:
     - npm run lint
     - npm run build
-after_success:
-    #FIXME: clear FTP step do not clear sub folders
-    - curl -u $FTP_LOGIN:$FTP_PASSWORD -l ftp://$FTP_HOST/www/ \
-        | xargs -I {} -- curl -u $FTP_LOGIN:$FTP_PASSWORD ftp://$FTP_HOST/ -Q "DELE www/{}"
-    - cd dist/worldover
-    - find . -type f -exec curl -u $FTP_LOGIN:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://$FTP_HOST/www/{} \;
+deploy:
+    provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: dist/worldover
+    on:
+        branch: master
