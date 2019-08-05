@@ -25,7 +25,6 @@
             "aot": false,
             "assets": [
               "src/favicon.ico",
-              "src/CNAME",
               "src/assets",
               "src/manifest.webmanifest"
             ],
@@ -90,7 +89,6 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/CNAME",
               "src/assets",
               "src/manifest.webmanifest"
             ],
