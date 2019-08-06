@@ -22,7 +22,7 @@ section {
         cursor: not-allowed;
     }
 
-    $base-color: deeppink;
+    $base-color: #4CAF50;
 
     &:not(.collapsed).selected {
         background-color: lighten($base-color, 30%);
