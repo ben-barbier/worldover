@@ -17,24 +17,25 @@ section {
     justify-content: center;
     height: 100%;
 
+    $safe-color: #4CAF50;
+    &.safe {
+        background-color: $safe-color;
+        cursor: pointer;
+    }
+    &.safe.selected, &.weakened.selected {
+        background-color: lighten($safe-color, 30%);
+    }
+    &.safe:not(.selected):hover, &.weakened:not(.selected):hover {
+        background-color: lighten($safe-color, 25%);
+        transition: background-color 120ms ease-in;
+    }
+    &.weakened {
+        background-color: scale-color($safe-color, $lightness: -30%);
+        cursor: pointer;
+    }
     &.collapsed {
         background-color: inherit;
         cursor: not-allowed;
     }
 
-    $base-color: #4CAF50;
-
-    &:not(.collapsed).selected {
-        background-color: lighten($base-color, 30%);
-    }
-
-    &:not(.collapsed) {
-        background-color: $base-color;
-        cursor: pointer;
-    }
-
-    &:not(.collapsed):not(.selected):hover {
-        background-color: lighten($base-color, 25%);
-        transition: background-color 120ms ease-in;
-    }
 }

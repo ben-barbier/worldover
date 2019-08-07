@@ -12,7 +12,7 @@ export const initialState: Arena = {
 export const arenaReducer = createReducer(
     initialState,
     on(ArenaActions.initArena, (state, action): Arena => action.arena),
-    on(ArenaActions.collapseArena, (state, action): Arena => action.collapsedArena),
+    on(ArenaActions.updateArena, (state, action): Arena => action.updatedArena),
 );
 
 export function reducer(state: Arena | undefined, action: Action) {

@@ -1,4 +1,9 @@
 <div class="position">{{ square.position.x }}-{{ square.position.y }}</div>
-<section [ngClass]="{collapsed: square.collapsed, selected: (selected$ | async)}">
+<section [ngClass]="{
+        collapsed: square.state === state.collapsed,
+        weakened: square.state === state.weakened,
+        safe: square.state === state.safe,
+        selected: (selected$ | async)
+    }">
     <app-character *ngIf="character" [character]="character" [selected$]="selected$"></app-character>
 </section>

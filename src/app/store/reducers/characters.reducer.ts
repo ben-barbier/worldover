@@ -1,6 +1,7 @@
 import {Action, createReducer, on} from '@ngrx/store';
 import {Character} from '../models/character.model';
 import {Position} from '../models/position.model';
+import {SquareState} from '../models/square.model';
 import * as CharactersActions from '../actions/characters.actions';
 import * as ArenaActions from '../actions/arena.actions';
 import * as GameActions from '../actions/game.actions';
@@ -39,10 +40,10 @@ export const charactersReducer = createReducer(
             .filter(c => c.name !== action.characterName)
             .concat({...characterToUpdate, availableActions: action.availableActions});
     }),
-    on(ArenaActions.collapseArena, (state, action) => {
+    on(ArenaActions.updateArena, (state, action) => {
 
-        const collapsedPositions = action.collapsedArena.squares
-            .filter(s => s.collapsed)
+        const collapsedPositions = action.updatedArena.squares
+            .filter(s => s.state === SquareState.collapsed)
             .map(s => s.position);
 
         return state

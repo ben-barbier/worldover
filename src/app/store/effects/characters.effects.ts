@@ -49,7 +49,7 @@ export class CharactersEffects {
 
     collapseArena$ = createEffect(() =>
         this.actions.pipe(
-            ofType(ArenaActions.collapseArena),
+            ofType(ArenaActions.updateArena),
             switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );
@@ -70,7 +70,7 @@ export class CharactersEffects {
 
     gameFinished$ = createEffect(() =>
         this.actions.pipe(
-            ofType(CharactersActions.attackCharacter, ArenaActions.collapseArena),
+            ofType(CharactersActions.attackCharacter, ArenaActions.updateArena),
             tap(() => {
                 const characters: Character[] = this.state.getValue().characters;
                 const aliveCharacters = characters.filter(c => c.healthPoints > 0);

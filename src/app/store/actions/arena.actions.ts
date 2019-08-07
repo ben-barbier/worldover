@@ -6,7 +6,7 @@ export const initArena = createAction(
     props<{ arena: Arena }>(),
 );
 
-export const collapseArena = createAction(
-    '[Arena] Collapse',
-    props<{ collapsedArena: Arena }>(),
+export const updateArena = createAction(
+    '[Arena] Update',
+    props<{ updatedArena: Arena }>(),
 );

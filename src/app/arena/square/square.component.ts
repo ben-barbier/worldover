@@ -3,7 +3,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState, charactersSelector, selectedCharacterSelector} from '../../store/app.state';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
-import {Square} from '../../store/models/square.model';
+import {Square, SquareState} from '../../store/models/square.model';
 import {Character} from '../../store/models/character.model';
 import {Position} from '../../store/models/position.model';
 
@@ -20,6 +20,8 @@ export class SquareComponent implements OnInit {
     public selected$: Observable<boolean>;
 
     public character: Character;
+
+    public state = SquareState;
 
     constructor(private store: Store<AppState>) {
     }

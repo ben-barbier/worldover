@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Position} from '../store/models/position.model';
 import {Arena} from '../store/models/arena.model';
 import {ActionType, Character, CharacterAction} from '../store/models/character.model';
-import {Square} from '../store/models/square.model';
+import {Square, SquareState} from '../store/models/square.model';
 import {ArenaService} from './arena.service';
 import {State} from '@ngrx/store';
 import {AppState} from '../store/app.state';
@@ -53,7 +53,7 @@ export class CharacterService {
             .filter(() => character.actionPoints > 0)
             .filter(ca => this.squareExists(ca.target))
             .filter(ca => this.positionIsFree(ca.target.position, characters))
-            .filter(ca => !ca.target.collapsed)
+            .filter(ca => ca.target.state !== SquareState.collapsed)
             .map(ca => ({
                 type: ca.type,
                 source: position,
