@@ -17,7 +17,7 @@ export class SquareComponent implements OnInit {
     @Input()
     public square: Square;
 
-    public selected: Observable<boolean>;
+    public selected$: Observable<boolean>;
 
     public character: Character;
 
@@ -25,7 +25,7 @@ export class SquareComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.selected = this.store.pipe(
+        this.selected$ = this.store.pipe(
             select(selectedCharacterSelector),
             filter(c => !!c),
             map((selectedCharacter: Character): boolean => Position.equals(selectedCharacter.position, this.square.position)),
