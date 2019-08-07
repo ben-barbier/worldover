@@ -26,6 +26,7 @@ export const charactersReducer = createReducer(
                 ...action.target,
                 healthPoints: action.target.healthPoints - 1,
             })
+            .filter(c => c.healthPoints > 0)
             .filter(c => c.name !== action.attacker.name)
             .concat({
                 ...action.attacker,
@@ -44,13 +45,15 @@ export const charactersReducer = createReducer(
             .filter(s => s.collapsed)
             .map(s => s.position);
 
-        return state.map(character => {
-            const characterIsOnCollapsedSquare = collapsedPositions.some(cp => Position.equals(character.position, cp));
-            if (characterIsOnCollapsedSquare) {
-                return {...character, healthPoints: 0, availableActions: []};
-            }
-            return character;
-        });
+        return state
+            .map(character => {
+                const characterIsOnCollapsedSquare = collapsedPositions.some(cp => Position.equals(character.position, cp));
+                if (characterIsOnCollapsedSquare) {
+                    return {...character, healthPoints: 0, availableActions: []};
+                }
+                return character;
+            })
+            .filter(c => c.healthPoints > 0);
 
     }),
     on(GameActions.updateRound, (state, action) => {
