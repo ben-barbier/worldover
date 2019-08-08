@@ -8,7 +8,6 @@ import {CharacterComponent} from './arena/character/character.component';
 import {StoreModule} from '@ngrx/store';
 import * as fromArena from './store/reducers/arena.reducer';
 import * as fromCharacters from './store/reducers/characters.reducer';
-import * as fromSelectedCharacter from './store/reducers/selected-character.reducer';
 import * as fromGame from './store/reducers/game.reducer';
 import {HealthPointsComponent} from './arena/character/health-points/health-points.component';
 import {ActionsComponent} from './character-status/actions/actions.component';
@@ -51,7 +50,6 @@ import {ExaequoComponent} from './dialogs/result/exaequo/exaequo.component';
         StoreModule.forRoot({
             arena: fromArena.reducer,
             characters: fromCharacters.reducer,
-            selectedCharacter: fromSelectedCharacter.reducer,
             game: fromGame.reducer,
         }, {
             runtimeChecks: {

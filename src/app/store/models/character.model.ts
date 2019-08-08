@@ -9,6 +9,7 @@ export class Character {
     availableActions: CharacterAction[] = [];
     position: Position;
     orientation: CharacterOrientation;
+    selected: boolean;
 }
 
 export interface CharacterAction {

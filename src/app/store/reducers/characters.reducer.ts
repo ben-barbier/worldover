@@ -10,7 +10,12 @@ export const initialState: Character[] = [];
 
 export const charactersReducer = createReducer(
     initialState,
-    on(CharactersActions.addCharacter, (state, action) => [...state, action.character]),
+    on(CharactersActions.addCharacter, (state, action) => {
+        if (state.length === 0) {
+            return [{...action.character, selected: true}];
+        }
+        return [...state, action.character];
+    }),
     on(CharactersActions.moveCharacter, (state, action) => {
         return state
             .filter(c => c.name !== action.character.name)
@@ -41,6 +46,13 @@ export const charactersReducer = createReducer(
         return state
             .filter(c => c.name !== action.characterName)
             .concat({...characterToUpdate, availableActions: action.availableActions});
+    }),
+    on(CharactersActions.selectCharacter, (state, action) => {
+        const characterToSelect = state.find(c => c.name === action.character.name);
+        return state
+            .map(c => ({...c, selected: false}))
+            .filter(c => c.name !== action.character.name)
+            .concat({...characterToSelect, selected: true});
     }),
     on(ArenaActions.updateArena, (state, action) => {
 

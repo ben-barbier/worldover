@@ -38,6 +38,7 @@ export class AppComponent {
                 orientation: CharacterOrientation.BOTTOM,
                 healthPoints: character.healthPointsTotal,
                 actionPoints: character.healthPointsTotal,
+                selected: false,
             };
             characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
             store.dispatch(addCharacter({character: characterToAdd}));

@@ -21,3 +21,8 @@ export const updateAvailableActions = createAction(
     '[Character] Update available actions',
     props<{ characterName: string, availableActions: CharacterAction[] }>(),
 );
+
+export const selectCharacter = createAction(
+    '[Character] Select',
+    props<{ character: Character }>(),
+);

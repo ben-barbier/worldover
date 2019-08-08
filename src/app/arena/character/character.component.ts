@@ -2,8 +2,8 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {Character, CharacterOrientation} from '../../store/models/character.model';
 import {AppState} from '../../store/app.state';
 import {Store} from '@ngrx/store';
-import {selectCharacter} from '../../store/actions/selected-character.actions';
-import {combineLatest, interval, Observable} from 'rxjs';
+import {selectCharacter} from '../../store/actions/characters.actions';
+import {interval} from 'rxjs';
 
 interface FrameCoordinates {
     sx: number;
@@ -31,9 +31,6 @@ export class CharacterComponent {
     @Input()
     public character: Character;
 
-    @Input()
-    public selected$: Observable<boolean>;
-
     constructor(private store: Store<AppState>) {
     }
 
@@ -53,11 +50,8 @@ export class CharacterComponent {
                 this.character.photo, this.defaultFrame, this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
             this.displayFrame(ctx, sprites, defaultFrameCoordinates);
 
-            combineLatest([
-                this.selected$,
-                interval(300),
-            ]).subscribe(([selected, i]) => {
-                if (selected) {
+            interval(300).subscribe(i => {
+                if (this.character.selected) {
                     this.frame = this.getNextFrame(i, this.frames);
                     const frameCoordinates = this.getFrameTopLeftCoordinates(
                         this.character.photo, this.frame, this.character.orientation, frameWidth, frameHeight, this.charactersByRow);

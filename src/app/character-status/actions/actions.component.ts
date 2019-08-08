@@ -1,6 +1,6 @@
 import {Component, HostListener} from '@angular/core';
 import {State, Store} from '@ngrx/store';
-import {AppState} from '../../store/app.state';
+import {AppState, selectedCharacterSelector} from '../../store/app.state';
 import {ArenaService} from '../../services/arena.service';
 import {ActionType, Character, CharacterOrientation} from '../../store/models/character.model';
 import {attackCharacter, moveCharacter} from '../../store/actions/characters.actions';
@@ -14,6 +14,8 @@ import {CharacterService} from '../../services/character.service';
 export class ActionsComponent {
 
     public actionType = ActionType;
+
+    private selectedCharacter: Character;
 
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
@@ -32,20 +34,18 @@ export class ActionsComponent {
                 private state: State<AppState>,
                 private arenaService: ArenaService,
                 private characterService: CharacterService) {
+        store.select(selectedCharacterSelector).subscribe(selectedCharacter =>
+            this.selectedCharacter = selectedCharacter
+        );
     }
 
     public hasAction(actionType: ActionType): boolean {
-        const selectedCharacter = this.state.getValue().selectedCharacter;
-        if (selectedCharacter) {
-            return selectedCharacter.availableActions.some(action => action.type === actionType);
-        }
-        return false;
+        return this.selectedCharacter.availableActions.some(action => action.type === actionType);
     }
 
     public executeAction(actionType: ActionType) {
-        const selectedCharacter: Character = this.state.getValue().selectedCharacter;
         const characters: Character[] = this.state.getValue().characters;
-        const action = selectedCharacter.availableActions.find(a => a.type === actionType);
+        const action = this.selectedCharacter.availableActions.find(a => a.type === actionType);
 
         if ([ActionType.MOVE_UP,
             ActionType.MOVE_RIGHT,
@@ -53,7 +53,7 @@ export class ActionsComponent {
             ActionType.MOVE_LEFT,
         ].includes(actionType)) {
             this.store.dispatch(moveCharacter({
-                character: selectedCharacter,
+                character: this.selectedCharacter,
                 destination: action.target,
                 orientation: this.getOrientation(actionType),
             }));
@@ -66,7 +66,7 @@ export class ActionsComponent {
             ActionType.ATTACK_LEFT,
         ].includes(actionType)) {
             this.store.dispatch(attackCharacter({
-                attacker: selectedCharacter,
+                attacker: this.selectedCharacter,
                 target: this.characterService.getPositionCharacter(action.target, characters),
                 orientation: this.getOrientation(actionType),
             }));

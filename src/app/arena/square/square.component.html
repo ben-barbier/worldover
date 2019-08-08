@@ -3,7 +3,7 @@
         collapsed: square.state === state.collapsed,
         weakened: square.state === state.weakened,
         safe: square.state === state.safe,
-        selected: (selected$ | async)
+        selected: character?.selected
     }">
-    <app-character *ngIf="character" [character]="character" [selected$]="selected$"></app-character>
+    <app-character *ngIf="character" [character]="character"></app-character>
 </section>
