@@ -57,7 +57,7 @@ export const charactersReducer = createReducer(
     on(ArenaActions.updateArena, (state, action) => {
 
         const collapsedPositions = action.updatedArena.squares
-            .filter(s => s.state === SquareState.collapsed)
+            .filter(s => s.state === SquareState.COLLAPSED)
             .map(s => s.position);
 
         return state

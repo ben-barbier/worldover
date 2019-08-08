@@ -1,9 +1,10 @@
 <div class="position">{{ square.position.x }}-{{ square.position.y }}</div>
 <section [ngClass]="{
-        collapsed: square.state === state.collapsed,
-        weakened: square.state === state.weakened,
-        safe: square.state === state.safe,
+        collapsed: square.state === state.COLLAPSED,
+        weakened: square.state === state.WEAKENED,
+        safe: square.state === state.SAFE,
         selected: character?.selected
     }">
     <app-character *ngIf="character" [character]="character"></app-character>
+    <canvas #canvasElement></canvas>
 </section>

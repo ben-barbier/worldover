@@ -53,7 +53,7 @@ export class CharacterService {
             .filter(() => character.actionPoints > 0)
             .filter(ca => this.squareExists(ca.target))
             .filter(ca => this.positionIsFree(ca.target.position, characters))
-            .filter(ca => ca.target.state !== SquareState.collapsed)
+            .filter(ca => ca.target.state !== SquareState.COLLAPSED)
             .map(ca => ({
                 type: ca.type,
                 source: position,
