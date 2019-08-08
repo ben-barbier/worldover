@@ -18,6 +18,7 @@ export const charactersReducer = createReducer(
                 ...action.character,
                 position: action.destination,
                 actionPoints: action.character.actionPoints - 1,
+                orientation: action.orientation,
             });
     }),
     on(CharactersActions.attackCharacter, (state, action) => {
@@ -32,6 +33,7 @@ export const charactersReducer = createReducer(
             .concat({
                 ...action.attacker,
                 actionPoints: action.attacker.actionPoints - 1,
+                orientation: action.orientation,
             });
     }),
     on(CharactersActions.updateAvailableActions, (state, action) => {

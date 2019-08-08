@@ -1,5 +1,5 @@
 import {Action, createReducer, on} from '@ngrx/store';
-import {Character} from '../models/character.model';
+import {Character, CharacterOrientation} from '../models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
 import * as SelectedCharacterActions from '../actions/selected-character.actions';
 import * as GameActions from '../actions/game.actions';
@@ -15,10 +15,12 @@ export const selectedCharacterReducer = createReducer(
         ...action.character,
         position: action.destination,
         actionPoints: state.actionPoints - 1,
+        orientation: action.orientation,
     })),
     on(CharactersActions.attackCharacter, (state, action) => ({
         ...action.attacker,
         actionPoints: state.actionPoints - 1,
+        orientation: action.orientation,
     })),
     on(CharactersActions.updateAvailableActions, (state, action) => {
         if (state && action.characterName === state.name) {

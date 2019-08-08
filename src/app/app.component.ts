@@ -5,7 +5,7 @@ import {initArena} from './store/actions/arena.actions';
 import {addCharacter} from './store/actions/characters.actions';
 import {CharacterService} from './services/character.service';
 import {ArenaService} from './services/arena.service';
-import {Character} from './store/models/character.model';
+import {Character, CharacterOrientation} from './store/models/character.model';
 import {Position} from './store/models/position.model';
 import {Game} from './store/models/game.model';
 
@@ -25,13 +25,20 @@ export class AppComponent {
         store.dispatch(initArena({arena}));
 
         [
-            {name: 'Bob', healthPoints: 3, healthPointsTotal: 3, photo: 1, actionPoints: 3},
-            {name: 'Alice', healthPoints: 3, healthPointsTotal: 3, photo: 2, actionPoints: 3},
-            {name: 'Ken', healthPoints: 3, healthPointsTotal: 3, photo: 3, actionPoints: 3},
-            {name: 'Ada', healthPoints: 3, healthPointsTotal: 3, photo: 5, actionPoints: 3},
+            {name: 'Bob', healthPointsTotal: 3, photo: 1},
+            {name: 'Alice', healthPointsTotal: 3, photo: 2},
+            {name: 'Ken', healthPointsTotal: 3, photo: 3},
+            {name: 'Ada', healthPointsTotal: 3, photo: 5},
         ].reduce((characters, character) => {
             const position: Position = characterService.getRandomAvailablePosition(arena, characters);
-            const characterToAdd: Character = {...character, position, availableActions: []};
+            const characterToAdd: Character = {
+                ...character,
+                position,
+                availableActions: [],
+                orientation: CharacterOrientation.BOTTOM,
+                healthPoints: character.healthPointsTotal,
+                actionPoints: character.healthPointsTotal,
+            };
             characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
             store.dispatch(addCharacter({character: characterToAdd}));
             return [...characters, characterToAdd];

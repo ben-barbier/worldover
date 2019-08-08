@@ -8,12 +8,20 @@ export class Character {
     actionPoints: number;
     availableActions: CharacterAction[] = [];
     position: Position;
+    orientation: CharacterOrientation;
 }
 
 export interface CharacterAction {
     type: ActionType;
     source: Position;
     target: Position;
+}
+
+export enum CharacterOrientation {
+    BOTTOM = 0,
+    LEFT = 1,
+    RIGHT = 2,
+    TOP = 3,
 }
 
 export enum ActionType {

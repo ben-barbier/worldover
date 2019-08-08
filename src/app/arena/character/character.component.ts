@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {Character} from '../../store/models/character.model';
+import {Character, CharacterOrientation} from '../../store/models/character.model';
 import {AppState} from '../../store/app.state';
 import {Store} from '@ngrx/store';
 import {selectCharacter} from '../../store/actions/selected-character.actions';
@@ -49,7 +49,7 @@ export class CharacterComponent {
             canvas.setAttribute('width', `${frameWidth}px`);
             canvas.setAttribute('height', `${frameHeight}px`);
             const defaultFrameCoordinates = this.getFrameTopLeftCoordinates(
-                this.character.photo, this.defaultFrame, frameWidth, frameHeight, this.charactersByRow);
+                this.character.photo, this.defaultFrame, this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
             this.displayFrame(ctx, sprites, defaultFrameCoordinates);
 
             combineLatest([
@@ -59,7 +59,7 @@ export class CharacterComponent {
                 if (selected) {
                     this.frame = this.getNextFrame(i, this.frames);
                     const frameCoordinates = this.getFrameTopLeftCoordinates(
-                        this.character.photo, this.frame, frameWidth, frameHeight, this.charactersByRow);
+                        this.character.photo, this.frame, this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
                     this.displayFrame(ctx, sprites, frameCoordinates);
                 } else if (this.frame !== this.defaultFrame) {
                     this.frame = this.defaultFrame;
@@ -79,12 +79,12 @@ export class CharacterComponent {
         );
     }
 
-    private getFrameTopLeftCoordinates(character: number, frame: number,
+    private getFrameTopLeftCoordinates(character: number, frame: number, orientation: CharacterOrientation,
                                        frameWidth: number, frameHeight: number,
                                        charactersByRow: number): FrameCoordinates {
         return {
             sx: (frameWidth * frame) + ((character % charactersByRow) - 1) * 3 * frameWidth,
-            sy: Math.floor(character / charactersByRow) * charactersByRow * frameHeight,
+            sy: (Math.floor(character / charactersByRow) * charactersByRow * frameHeight) + (orientation * frameHeight),
             width: frameWidth,
             height: frameHeight,
         };
