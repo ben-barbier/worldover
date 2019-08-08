@@ -24,9 +24,9 @@ export class CharacterComponent {
     private readonly framesByColumn = 8;
     private readonly charactersByRow = 4;
     private readonly frames = [1, 2, 1, 0];
-    private readonly defaultFrame = 1;
+    private readonly defaultFrameIdx = 0;
 
-    private frame: number = this.defaultFrame;
+    private frameIdx: number = this.defaultFrameIdx;
 
     @Input()
     public character: Character;
@@ -46,19 +46,24 @@ export class CharacterComponent {
             const frameHeight = sprites.height / this.framesByColumn;
             canvas.setAttribute('width', `${frameWidth}px`);
             canvas.setAttribute('height', `${frameHeight}px`);
-            const defaultFrameCoordinates = this.getFrameTopLeftCoordinates(
-                this.character.photo, this.defaultFrame, this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
-            this.displayFrame(ctx, sprites, defaultFrameCoordinates);
+            const initialFrameCoordinates = this.getFrameTopLeftCoordinates(
+                this.character.photo, this.frames[this.defaultFrameIdx],
+                this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
+            this.displayFrame(ctx, sprites, initialFrameCoordinates);
 
-            interval(300).subscribe(i => {
+            interval(300).subscribe(() => {
                 if (this.character.selected) {
-                    this.frame = this.getNextFrame(i, this.frames);
+                    this.frameIdx = this.getNextFrameIdx(this.frameIdx, this.frames);
                     const frameCoordinates = this.getFrameTopLeftCoordinates(
-                        this.character.photo, this.frame, this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
+                        this.character.photo, this.frames[this.frameIdx],
+                        this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
                     this.displayFrame(ctx, sprites, frameCoordinates);
-                } else if (this.frame !== this.defaultFrame) {
-                    this.frame = this.defaultFrame;
-                    this.displayFrame(ctx, sprites, defaultFrameCoordinates);
+                } else if (this.frameIdx !== this.defaultFrameIdx) {
+                    this.frameIdx = this.defaultFrameIdx;
+                    const frameCoordinates = this.getFrameTopLeftCoordinates(
+                        this.character.photo, this.frames[this.frameIdx],
+                        this.character.orientation, frameWidth, frameHeight, this.charactersByRow);
+                    this.displayFrame(ctx, sprites, frameCoordinates);
                 }
             });
         };
@@ -85,8 +90,8 @@ export class CharacterComponent {
         };
     }
 
-    private getNextFrame(i: number, frames: number[]): number {
-        return frames[i % frames.length];
+    private getNextFrameIdx(currentFrameIdx: number, frames: number[]): number {
+        return (currentFrameIdx + 1) % frames.length;
     }
 
     public selectCharacter(character: Character) {
