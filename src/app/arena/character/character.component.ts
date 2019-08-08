@@ -43,6 +43,7 @@ export class CharacterComponent {
         const sprites = new Image();
         sprites.src = this.spritesUrl;
         const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false; // turn off image aliasing
         sprites.onload = () => {
             const frameWidth = sprites.width / this.framesByRow;
             const frameHeight = sprites.height / this.framesByColumn;
