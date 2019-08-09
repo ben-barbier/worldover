@@ -1,3 +1,14 @@
+:host {
+    background: no-repeat url("/assets/background/sky.jpg");
+    height: 100vh;
+    display: block;
+}
+
+app-game-status {
+    color: white;
+}
+
 app-character-status {
     margin-bottom: 10px;
+    color: white;
 }
