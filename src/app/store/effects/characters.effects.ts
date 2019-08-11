@@ -64,27 +64,10 @@ export class CharactersEffects {
 
     goToTheNextRound$ = createEffect(() =>
         this.actions.pipe(
-            ofType(GameActions.updateRound),
+            ofType(GameActions.gotoNextRound),
             switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );
-
-    gameFinished$ = createEffect(() =>
-        this.actions.pipe(
-            ofType(CharactersActions.attackCharacter, ArenaActions.updateArena),
-            tap(() => {
-                const characters: Character[] = this.state.getValue().characters;
-                const aliveCharacters = characters.filter(c => c.healthPoints > 0);
-                if (aliveCharacters.length === 1) {
-                    this.audioService.playAudio(Sound.FINISH);
-                    this.dialog.open(WinComponent, {
-                        data: {winner: aliveCharacters[0]}
-                    });
-                } else if (aliveCharacters.length === 0) {
-                    this.dialog.open(ExaequoComponent);
-                }
-            }),
-        ), {dispatch: false});
 
     constructor(private actions: Actions,
                 private state: State<AppState>,

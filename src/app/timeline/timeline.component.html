@@ -1,0 +1,12 @@
+<fieldset>
+    <legend>Round : {{ round }}</legend>
+    <div class="scheduler">
+        <img alt="😠"
+             *ngFor="let rtl of roundTimeline; let i = index"
+             [src]="'assets/characters/heads/' + rtl.photo + '.png'"
+             [ngClass]="{
+                 current: timelineCurrentStep === (i + 1),
+                 dead: !rtl.alive
+             }">
+    </div>
+</fieldset>

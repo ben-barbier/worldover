@@ -28,18 +28,30 @@ export const charactersReducer = createReducer(
     }),
     on(CharactersActions.attackCharacter, (state, action) => {
         return state
-            .filter(c => c.name !== action.target.name)
-            .concat({
-                ...action.target,
-                healthPoints: action.target.healthPoints - 1,
-            })
-            .filter(c => c.healthPoints > 0)
             .filter(c => c.name !== action.attacker.name)
             .concat({
                 ...action.attacker,
                 actionPoints: action.attacker.actionPoints - 1,
                 orientation: action.orientation,
             });
+    }),
+    on(CharactersActions.characterDamaged, (state, action) => {
+        return state
+            .filter(c => c.name !== action.character.name)
+            .concat({
+                ...action.character,
+                healthPoints: action.character.healthPoints - 1,
+            })
+            .filter(c => c.healthPoints > 0);
+    }),
+    on(CharactersActions.characterKilled, (state, action) => {
+        return state
+            .filter(c => c.name !== action.character.name)
+            .concat({
+                ...action.character,
+                healthPoints: 0,
+            })
+            .filter(c => c.healthPoints > 0);
     }),
     on(CharactersActions.updateAvailableActions, (state, action) => {
         const characterToUpdate = state.find(c => c.name === action.characterName);
@@ -48,10 +60,10 @@ export const charactersReducer = createReducer(
             .concat({...characterToUpdate, availableActions: action.availableActions});
     }),
     on(CharactersActions.selectCharacter, (state, action) => {
-        const characterToSelect = state.find(c => c.name === action.character.name);
+        const characterToSelect = state.find(c => c.name === action.characterName);
         return state
             .map(c => ({...c, selected: false}))
-            .filter(c => c.name !== action.character.name)
+            .filter(c => c.name !== action.characterName)
             .concat({...characterToSelect, selected: true});
     }),
     on(ArenaActions.updateArena, (state, action) => {
@@ -71,7 +83,7 @@ export const charactersReducer = createReducer(
             .filter(c => c.healthPoints > 0);
 
     }),
-    on(GameActions.updateRound, (state, action) => {
+    on(GameActions.gotoNextRound, (state, action) => {
         return [...state].map(c => ({...c, actionPoints: c.healthPoints}));
     }),
 );

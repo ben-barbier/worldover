@@ -1,8 +1,21 @@
-app-game-status {
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+app-timeline {
     color: white;
 }
 
 app-character-status {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     color: white;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }

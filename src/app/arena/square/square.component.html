@@ -1,9 +1,14 @@
-<section [ngClass]="{
+<section mat-ripple
+    [matRippleDisabled]="square.state === state.COLLAPSED"
+    [ngClass]="{
         collapsed: square.state === state.COLLAPSED,
         weakened: square.state === state.WEAKENED,
         safe: square.state === state.SAFE,
-        selected: character?.selected
-    }">
+        selected: character?.selected,
+        hasAction: !!availableAction,
+        hasCharacter: !!character
+    }"
+>
 
     <app-character *ngIf="character" [character]="character"></app-character>
 

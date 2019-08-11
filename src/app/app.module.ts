@@ -17,14 +17,15 @@ import {MatRippleModule} from '@angular/material/core';
 import {EffectsModule} from '@ngrx/effects';
 import {CharactersEffects} from './store/effects/characters.effects';
 import {CharacterStatusComponent} from './character-status/character-status.component';
-import {ArenaEffects} from './store/effects/arena.effects';
-import {GameStatusComponent} from './game-status/game-status.component';
+import {TimelineComponent} from './timeline/timeline.component';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material';
 import {WinComponent} from './dialogs/result/win/win.component';
 import {ExaequoComponent} from './dialogs/result/exaequo/exaequo.component';
-import {KeyboardManagerDirective} from './character-status/actions/keyboard-manager.directive';
+import {KeyboardManagerDirective} from './directives/keyboard-manager.directive';
+import {GameOverEffects} from './store/effects/game-over.effects';
+import {CollapseWeakenEffects} from './store/effects/collapse-weaken.effects';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,7 @@ import {KeyboardManagerDirective} from './character-status/actions/keyboard-mana
         CharacterComponent,
         HealthPointsComponent,
         CharacterStatusComponent,
-        GameStatusComponent,
+        TimelineComponent,
         WinComponent,
         ExaequoComponent,
         KeyboardManagerDirective,
@@ -59,7 +60,8 @@ import {KeyboardManagerDirective} from './character-status/actions/keyboard-mana
         }),
         EffectsModule.forRoot([
             CharactersEffects,
-            ArenaEffects,
+            CollapseWeakenEffects,
+            GameOverEffects,
         ]),
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
         // FIXME: https://github.com/ngrx/platform/issues/1054 (Effect gets called twice when using StoreDevtoolsModule.instrument())

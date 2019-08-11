@@ -18,12 +18,8 @@ section {
     justify-content: center;
     height: 100%;
 
-    &.safe {
+    &.hasAction {
         cursor: pointer;
-    }
-    &.safe:not(.selected):hover, &.weakened:not(.selected):hover {
-        // TODO: mettre un style au survol
-        //transition: background-color 120ms ease-in;
     }
     &.collapsed {
         cursor: not-allowed;

@@ -1,8 +1,5 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {Character, CharacterOrientation} from '../../store/models/character.model';
-import {AppState} from '../../store/app.state';
-import {Store} from '@ngrx/store';
-import {selectCharacter} from '../../store/actions/characters.actions';
 import {interval} from 'rxjs';
 
 interface FrameCoordinates {
@@ -30,9 +27,6 @@ export class CharacterComponent {
 
     @Input()
     public character: Character;
-
-    constructor(private store: Store<AppState>) {
-    }
 
     @ViewChild('canvasElement', {static: false})
     set canvas(canvasElement: ElementRef) {
@@ -92,10 +86,6 @@ export class CharacterComponent {
 
     private getNextFrameIdx(currentFrameIdx: number, frames: number[]): number {
         return (currentFrameIdx + 1) % frames.length;
-    }
-
-    public selectCharacter(character: Character) {
-        this.store.dispatch(selectCharacter({character}));
     }
 
 }

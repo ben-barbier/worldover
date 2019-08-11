@@ -8,6 +8,8 @@ import {ArenaService} from './services/arena.service';
 import {Character, CharacterOrientation} from './store/models/character.model';
 import {Position} from './store/models/position.model';
 import {Game} from './store/models/game.model';
+import {GameService} from './services/game.service';
+import {initGame} from './store/actions/game.actions';
 
 @Component({
     selector: 'app-root',
@@ -18,19 +20,19 @@ export class AppComponent {
 
     constructor(private store: Store<AppState>,
                 private characterService: CharacterService,
-                private arenaService: ArenaService) {
+                private arenaService: ArenaService,
+                private gameService: GameService) {
 
-        const game: Game = {round: 1};
         const arena = arenaService.generateArena(5, 5);
         store.dispatch(initArena({arena}));
 
-        [
+        const characters = [
             {name: 'Bob', healthPointsTotal: 3, photo: 1},
             {name: 'Alice', healthPointsTotal: 3, photo: 2},
             {name: 'Ken', healthPointsTotal: 3, photo: 3},
             {name: 'Ada', healthPointsTotal: 3, photo: 5},
-        ].reduce((characters, character) => {
-            const position: Position = characterService.getRandomAvailablePosition(arena, characters);
+        ].reduce((charactersTmp, character) => {
+            const position: Position = characterService.getRandomAvailablePosition(arena, charactersTmp);
             const characterToAdd: Character = {
                 ...character,
                 position,
@@ -42,8 +44,15 @@ export class AppComponent {
             };
             characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
             store.dispatch(addCharacter({character: characterToAdd}));
-            return [...characters, characterToAdd];
+            return [...charactersTmp, characterToAdd];
         }, []);
+
+        const game: Game = {
+            round: 1,
+            roundTimeline: gameService.generateRoundTimeline(1, characters),
+            timelineCurrentStep: 1,
+        };
+        store.dispatch(initGame({game}));
 
     }
 

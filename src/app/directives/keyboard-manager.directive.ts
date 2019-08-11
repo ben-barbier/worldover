@@ -1,10 +1,10 @@
 import {Directive, HostListener} from '@angular/core';
 import {State, Store} from '@ngrx/store';
-import {AppState, selectedCharacterSelector} from '../../store/app.state';
-import {ArenaService} from '../../services/arena.service';
-import {ActionType, ActionTypeCategory, Character} from '../../store/models/character.model';
-import {moveCharacter} from '../../store/actions/characters.actions';
-import {CharacterService} from '../../services/character.service';
+import {AppState, selectedCharacterSelector} from '../store/app.state';
+import {ArenaService} from '../services/arena.service';
+import {ActionType, ActionTypeCategory, Character} from '../store/models/character.model';
+import {moveCharacter} from '../store/actions/characters.actions';
+import {CharacterService} from '../services/character.service';
 
 @Directive({
     selector: '[appKeyboardManager]',

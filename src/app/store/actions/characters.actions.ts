@@ -3,18 +3,28 @@ import {Character, CharacterAction, CharacterOrientation} from '../models/charac
 import {Position} from '../models/position.model';
 
 export const addCharacter = createAction(
-    '[Character] Add',
+    '[Character] Add character',
     props<{ character: Character }>(),
 );
 
 export const moveCharacter = createAction(
-    '[Character] Move',
+    '[Character] Move character',
     props<{ character: Character, destination: Position, orientation: CharacterOrientation }>(),
 );
 
 export const attackCharacter = createAction(
-    '[Character] Attack',
-    props<{ attacker: Character, target: Character, orientation: CharacterOrientation }>(),
+    '[Character] Attack character',
+    props<{ attacker: Character, orientation: CharacterOrientation }>(),
+);
+
+export const characterDamaged = createAction(
+    '[Character] Character damaged',
+    props<{ character: Character, damage: number }>(),
+);
+
+export const characterKilled = createAction(
+    '[Character] Character killed',
+    props<{ character: Character }>(),
 );
 
 export const updateAvailableActions = createAction(
@@ -23,6 +33,6 @@ export const updateAvailableActions = createAction(
 );
 
 export const selectCharacter = createAction(
-    '[Character] Select',
-    props<{ character: Character }>(),
+    '[Character] Select character',
+    props<{ characterName: string }>(),
 );

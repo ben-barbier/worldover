@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+fieldset {
+    width: 100%;
+}
+
+fieldset > div {
+    display: flex;
+    align-items: center;
+}
+
+.scheduler {
+    img {
+        max-height: 3em;
+        border: 4px solid;
+        &.current {
+            border-color: yellow;
+        }
+        &:not(.current) {
+            border-color: transparent;
+        }
+        &.dead {
+            border-color: darkslategrey;
+            filter: grayscale(100%);
+        }
+    }
+}

@@ -11,4 +11,5 @@ export interface AppState {
 export const arenaSelector = (state: AppState) => state.arena;
 export const charactersSelector = (state: AppState) => state.characters;
 export const gameSelector = (state: AppState) => state.game;
+export const timelineCurrentStepSelector = (state: AppState) => state.game.timelineCurrentStep;
 export const selectedCharacterSelector = (state: AppState) => state.characters.find(c => c.selected);

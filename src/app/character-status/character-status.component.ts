@@ -15,13 +15,11 @@ export class CharacterStatusComponent {
 
     constructor(private store: Store<AppState>,
                 private gameService: GameService) {
-        this.store.pipe(
-            select(selectedCharacterSelector),
-        ).subscribe(c => this.character = c);
+        this.store.pipe(select(selectedCharacterSelector)).subscribe(character => this.character = character);
     }
 
     public validateActions() {
-        this.gameService.goToTheNextRound();
+        this.gameService.validateCharacterActions();
     }
 
 }
