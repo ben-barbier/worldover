@@ -1,8 +1,8 @@
 {
   "name": "worldover",
   "short_name": "worldover",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "theme_color": "#336fac",
+  "background_color": "#336fac",
   "display": "fullscreen",
   "orientation": "portrait",
   "scope": "/",
