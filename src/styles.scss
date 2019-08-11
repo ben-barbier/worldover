@@ -11,6 +11,7 @@ body {
     touch-action: none;
     & > h1 {
         color: white;
+        transition: 300ms ease-in;
     }
 }
 
