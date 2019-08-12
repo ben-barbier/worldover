@@ -10,7 +10,6 @@ import * as fromArena from './store/reducers/arena.reducer';
 import * as fromCharacters from './store/reducers/characters.reducer';
 import * as fromGame from './store/reducers/game.reducer';
 import {HealthPointsComponent} from './arena/character/health-points/health-points.component';
-import {ActionsComponent} from './character-status/actions/actions.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -25,6 +24,7 @@ import {environment} from '../environments/environment';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material';
 import {WinComponent} from './dialogs/result/win/win.component';
 import {ExaequoComponent} from './dialogs/result/exaequo/exaequo.component';
+import {KeyboardManagerDirective} from './character-status/actions/keyboard-manager.directive';
 
 @NgModule({
     declarations: [
@@ -33,11 +33,11 @@ import {ExaequoComponent} from './dialogs/result/exaequo/exaequo.component';
         SquareComponent,
         CharacterComponent,
         HealthPointsComponent,
-        ActionsComponent,
         CharacterStatusComponent,
         GameStatusComponent,
         WinComponent,
         ExaequoComponent,
+        KeyboardManagerDirective,
     ],
     imports: [
         BrowserModule,

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Position} from '../store/models/position.model';
 import {Arena} from '../store/models/arena.model';
-import {ActionType, Character, CharacterAction} from '../store/models/character.model';
+import {ActionType, Character, CharacterAction, CharacterOrientation} from '../store/models/character.model';
 import {Square, SquareState} from '../store/models/square.model';
 import {ArenaService} from './arena.service';
 import {State} from '@ngrx/store';
@@ -101,4 +101,18 @@ export class CharacterService {
                 s.position.x - 1 === position.x && s.position.y === position.y;      // ⬅
         });
     }
+
+    public getOrientation(actionType: ActionType): CharacterOrientation {
+        return [
+            {action: ActionType.MOVE_UP, orientation: CharacterOrientation.TOP},
+            {action: ActionType.MOVE_RIGHT, orientation: CharacterOrientation.RIGHT},
+            {action: ActionType.MOVE_BOTTOM, orientation: CharacterOrientation.BOTTOM},
+            {action: ActionType.MOVE_LEFT, orientation: CharacterOrientation.LEFT},
+            {action: ActionType.ATTACK_UP, orientation: CharacterOrientation.TOP},
+            {action: ActionType.ATTACK_RIGHT, orientation: CharacterOrientation.RIGHT},
+            {action: ActionType.ATTACK_BOTTOM, orientation: CharacterOrientation.BOTTOM},
+            {action: ActionType.ATTACK_LEFT, orientation: CharacterOrientation.LEFT},
+        ].find(e => e.action === actionType).orientation;
+    }
+
 }

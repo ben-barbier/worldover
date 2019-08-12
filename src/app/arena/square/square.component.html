@@ -4,6 +4,19 @@
         safe: square.state === state.SAFE,
         selected: character?.selected
     }">
+
     <app-character *ngIf="character" [character]="character"></app-character>
+
+    <mat-icon (click)="executeAction(actionTypes.MOVE_UP)" *ngIf="availableAction === actionTypes.MOVE_UP">arrow_upward</mat-icon>
+    <mat-icon (click)="executeAction(actionTypes.MOVE_RIGHT)" *ngIf="availableAction === actionTypes.MOVE_RIGHT">arrow_forward</mat-icon>
+    <mat-icon (click)="executeAction(actionTypes.MOVE_BOTTOM)" *ngIf="availableAction === actionTypes.MOVE_BOTTOM">arrow_downward</mat-icon>
+    <mat-icon (click)="executeAction(actionTypes.MOVE_LEFT)" *ngIf="availableAction === actionTypes.MOVE_LEFT">arrow_back</mat-icon>
+
+    <img alt="⚔️" class="action" src="assets/actions/attack.png" (click)="executeAction(actionTypes.ATTACK_UP)" *ngIf="availableAction === actionTypes.ATTACK_UP">
+    <img alt="⚔️" class="action" src="assets/actions/attack.png" (click)="executeAction(actionTypes.ATTACK_RIGHT)" *ngIf="availableAction === actionTypes.ATTACK_RIGHT">
+    <img alt="⚔️" class="action" src="assets/actions/attack.png" (click)="executeAction(actionTypes.ATTACK_BOTTOM)" *ngIf="availableAction === actionTypes.ATTACK_BOTTOM">
+    <img alt="⚔️" class="action" src="assets/actions/attack.png" (click)="executeAction(actionTypes.ATTACK_LEFT)" *ngIf="availableAction === actionTypes.ATTACK_LEFT">
+
     <canvas #canvasElement></canvas>
+
 </section>

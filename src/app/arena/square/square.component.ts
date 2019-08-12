@@ -1,9 +1,12 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState, charactersSelector} from '../../store/app.state';
+import {AppState, charactersSelector, selectedCharacterSelector} from '../../store/app.state';
 import {Square, SquareState, SquareStyle} from '../../store/models/square.model';
-import {Character} from '../../store/models/character.model';
+import {ActionType, ActionTypeCategory, Character} from '../../store/models/character.model';
 import {Position} from '../../store/models/position.model';
+import {filter, flatMap, map, tap} from 'rxjs/operators';
+import {attackCharacter, moveCharacter} from '../../store/actions/characters.actions';
+import {CharacterService} from '../../services/character.service';
 
 @Component({
     selector: 'app-square',
@@ -50,16 +53,34 @@ export class SquareComponent implements OnInit, AfterViewInit {
 
     public state = SquareState;
 
+    public actionTypes = ActionType;
+
+    public availableAction: ActionType;
+
     @ViewChild('canvasElement', {static: false})
     canvas: ElementRef;
 
-    constructor(private store: Store<AppState>) {
+    private selectedCharacter: Character;
+
+    constructor(private store: Store<AppState>,
+                private characterService: CharacterService) {
     }
 
     ngOnInit(): void {
         this.store.select(charactersSelector).subscribe((characters: Character[]) => {
             const characterOnSquare = characters.find(character => Position.equals(character.position, this.square.position));
             this.character = characterOnSquare ? characterOnSquare : null;
+        });
+        this.store.select(selectedCharacterSelector).pipe(
+            tap(selectedCharacter => this.selectedCharacter = selectedCharacter),
+            filter(selectedCharacter => !!selectedCharacter),
+            tap(() => this.availableAction = null),
+            map(character => character.availableActions),
+            flatMap(e => e),
+            filter(action => Position.equals(action.target, this.square.position)),
+            map(action => action.type)
+        ).subscribe(availableAction => {
+            this.availableAction = availableAction;
         });
     }
 
@@ -92,6 +113,25 @@ export class SquareComponent implements OnInit, AfterViewInit {
                 );
             }
         };
+    }
+
+    public executeAction(actionType: ActionType): void {
+        if (ActionTypeCategory.MOVE.includes(actionType)) {
+            this.store.dispatch(moveCharacter({
+                character: this.selectedCharacter,
+                destination: this.square.position,
+                orientation: this.characterService.getOrientation(actionType),
+            }));
+        }
+
+        if (ActionTypeCategory.ATTACK.includes(actionType)) {
+            this.store.dispatch(attackCharacter({
+                attacker: this.selectedCharacter,
+                target: this.character,
+                orientation: this.characterService.getOrientation(actionType),
+            }));
+        }
+
     }
 
 }

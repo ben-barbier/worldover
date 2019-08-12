@@ -1,19 +1,15 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, Directive, HostListener} from '@angular/core';
 import {State, Store} from '@ngrx/store';
 import {AppState, selectedCharacterSelector} from '../../store/app.state';
 import {ArenaService} from '../../services/arena.service';
-import {ActionType, Character, CharacterOrientation} from '../../store/models/character.model';
+import {ActionType, Character} from '../../store/models/character.model';
 import {attackCharacter, moveCharacter} from '../../store/actions/characters.actions';
 import {CharacterService} from '../../services/character.service';
 
-@Component({
-    selector: 'app-actions',
-    templateUrl: './actions.component.html',
-    styleUrls: ['./actions.component.scss']
+@Directive({
+    selector: '[appKeyboardManager]',
 })
-export class ActionsComponent {
-
-    public actionType = ActionType;
+export class KeyboardManagerDirective {
 
     private selectedCharacter: Character;
 
@@ -55,7 +51,7 @@ export class ActionsComponent {
             this.store.dispatch(moveCharacter({
                 character: this.selectedCharacter,
                 destination: action.target,
-                orientation: this.getOrientation(actionType),
+                orientation: this.characterService.getOrientation(actionType),
             }));
         }
 
@@ -68,7 +64,7 @@ export class ActionsComponent {
             this.store.dispatch(attackCharacter({
                 attacker: this.selectedCharacter,
                 target: this.characterService.getPositionCharacter(action.target, characters),
-                orientation: this.getOrientation(actionType),
+                orientation: this.characterService.getOrientation(actionType),
             }));
         }
     }
@@ -78,19 +74,6 @@ export class ActionsComponent {
         if (actionToExecute !== undefined) {
             this.executeAction(actionToExecute);
         }
-    }
-
-    private getOrientation(actionType: ActionType): CharacterOrientation {
-        return [
-            {action: ActionType.MOVE_UP, orientation: CharacterOrientation.TOP},
-            {action: ActionType.MOVE_RIGHT, orientation: CharacterOrientation.RIGHT},
-            {action: ActionType.MOVE_BOTTOM, orientation: CharacterOrientation.BOTTOM},
-            {action: ActionType.MOVE_LEFT, orientation: CharacterOrientation.LEFT},
-            {action: ActionType.ATTACK_UP, orientation: CharacterOrientation.TOP},
-            {action: ActionType.ATTACK_RIGHT, orientation: CharacterOrientation.RIGHT},
-            {action: ActionType.ATTACK_BOTTOM, orientation: CharacterOrientation.BOTTOM},
-            {action: ActionType.ATTACK_LEFT, orientation: CharacterOrientation.LEFT},
-        ].find(e => e.action === actionType).orientation;
     }
 
 }

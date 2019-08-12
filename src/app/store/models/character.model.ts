@@ -35,3 +35,8 @@ export enum ActionType {
     ATTACK_BOTTOM,
     ATTACK_LEFT,
 }
+
+export const ActionTypeCategory = {
+    MOVE: [ActionType.MOVE_UP, ActionType.MOVE_RIGHT, ActionType.MOVE_BOTTOM, ActionType.MOVE_LEFT],
+    ATTACK: [ActionType.ATTACK_UP, ActionType.ATTACK_RIGHT, ActionType.ATTACK_BOTTOM, ActionType.ATTACK_LEFT],
+};
