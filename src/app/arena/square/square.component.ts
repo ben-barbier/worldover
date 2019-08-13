@@ -7,6 +7,7 @@ import {Position} from '../../store/models/position.model';
 import {filter, flatMap, map, tap} from 'rxjs/operators';
 import {attackCharacter, moveCharacter} from '../../store/actions/characters.actions';
 import {CharacterService} from '../../services/character.service';
+import {AudioService, Sound} from '../../services/audio.service';
 
 @Component({
     selector: 'app-square',
@@ -63,7 +64,8 @@ export class SquareComponent implements OnInit, AfterViewInit {
     private selectedCharacter: Character;
 
     constructor(private store: Store<AppState>,
-                private characterService: CharacterService) {
+                private characterService: CharacterService,
+                private audioService: AudioService) {
     }
 
     ngOnInit(): void {
@@ -117,21 +119,11 @@ export class SquareComponent implements OnInit, AfterViewInit {
 
     public executeAction(actionType: ActionType): void {
         if (ActionTypeCategory.MOVE.includes(actionType)) {
-            this.store.dispatch(moveCharacter({
-                character: this.selectedCharacter,
-                destination: this.square.position,
-                orientation: this.characterService.getOrientation(actionType),
-            }));
+            this.characterService.move(actionType, this.selectedCharacter, this.square.position);
         }
-
         if (ActionTypeCategory.ATTACK.includes(actionType)) {
-            this.store.dispatch(attackCharacter({
-                attacker: this.selectedCharacter,
-                target: this.character,
-                orientation: this.characterService.getOrientation(actionType),
-            }));
+            this.characterService.attack(actionType, this.selectedCharacter, this.character);
         }
-
     }
 
 }

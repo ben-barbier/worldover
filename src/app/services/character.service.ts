@@ -4,8 +4,10 @@ import {Arena} from '../store/models/arena.model';
 import {ActionType, Character, CharacterAction, CharacterOrientation} from '../store/models/character.model';
 import {Square, SquareState} from '../store/models/square.model';
 import {ArenaService} from './arena.service';
-import {State} from '@ngrx/store';
+import {State, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
+import {attackCharacter, moveCharacter} from '../store/actions/characters.actions';
+import {AudioService, Sound} from './audio.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +15,9 @@ import {AppState} from '../store/app.state';
 export class CharacterService {
 
     constructor(private arenaService: ArenaService,
-                private state: State<AppState>) {
+                private audioService: AudioService,
+                private state: State<AppState>,
+                private store: Store<AppState>) {
     }
 
     public getRandomAvailablePosition(arena: Arena, characters: Character[]): Position {
@@ -27,6 +31,23 @@ export class CharacterService {
         const attackActions: CharacterAction[] = this.getAttackActions(position, character, characters);
         const moveActions: CharacterAction[] = this.getMoveActions(position, character, characters);
         return [...attackActions, ...moveActions];
+    }
+
+    public attack(actionType: ActionType, attacker: Character, target: Character): void {
+        this.audioService.playAudio(Sound.ATTACK);
+        this.store.dispatch(attackCharacter({
+            attacker,
+            target,
+            orientation: this.getOrientation(actionType),
+        }));
+    }
+
+    public move(actionType: ActionType, character: Character, destination: Position): void {
+        this.store.dispatch(moveCharacter({
+            character,
+            destination,
+            orientation: this.getOrientation(actionType),
+        }));
     }
 
     private getAttackActions(position, character: Character, characters: Character[]) {

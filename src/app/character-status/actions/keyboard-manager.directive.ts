@@ -1,9 +1,9 @@
-import {Component, Directive, HostListener} from '@angular/core';
+import {Directive, HostListener} from '@angular/core';
 import {State, Store} from '@ngrx/store';
 import {AppState, selectedCharacterSelector} from '../../store/app.state';
 import {ArenaService} from '../../services/arena.service';
-import {ActionType, Character} from '../../store/models/character.model';
-import {attackCharacter, moveCharacter} from '../../store/actions/characters.actions';
+import {ActionType, ActionTypeCategory, Character} from '../../store/models/character.model';
+import {moveCharacter} from '../../store/actions/characters.actions';
 import {CharacterService} from '../../services/character.service';
 
 @Directive({
@@ -43,29 +43,14 @@ export class KeyboardManagerDirective {
         const characters: Character[] = this.state.getValue().characters;
         const action = this.selectedCharacter.availableActions.find(a => a.type === actionType);
 
-        if ([ActionType.MOVE_UP,
-            ActionType.MOVE_RIGHT,
-            ActionType.MOVE_BOTTOM,
-            ActionType.MOVE_LEFT,
-        ].includes(actionType)) {
-            this.store.dispatch(moveCharacter({
-                character: this.selectedCharacter,
-                destination: action.target,
-                orientation: this.characterService.getOrientation(actionType),
-            }));
+        if (ActionTypeCategory.MOVE.includes(actionType)) {
+            this.characterService.move(actionType, this.selectedCharacter, action.target);
         }
 
-        if ([
-            ActionType.ATTACK_UP,
-            ActionType.ATTACK_RIGHT,
-            ActionType.ATTACK_BOTTOM,
-            ActionType.ATTACK_LEFT,
-        ].includes(actionType)) {
-            this.store.dispatch(attackCharacter({
-                attacker: this.selectedCharacter,
-                target: this.characterService.getPositionCharacter(action.target, characters),
-                orientation: this.characterService.getOrientation(actionType),
-            }));
+        if (ActionTypeCategory.ATTACK.includes(actionType)) {
+            this.characterService.attack(
+                actionType, this.selectedCharacter,
+                this.characterService.getPositionCharacter(action.target, characters));
         }
     }
 
