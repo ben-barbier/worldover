@@ -10,6 +10,7 @@ export class Character {
     position: Position;
     orientation: CharacterOrientation;
     selected: boolean;
+    // playerId: number;
 }
 
 export interface CharacterAction {

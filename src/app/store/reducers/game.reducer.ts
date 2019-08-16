@@ -7,6 +7,7 @@ export const initialState: Game = {
     round: 1,
     roundTimeline: [],
     timelineCurrentStep: 1,
+    // players: [],
 };
 
 export const gameReducer = createReducer(

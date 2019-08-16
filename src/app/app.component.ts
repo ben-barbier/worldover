@@ -27,10 +27,10 @@ export class AppComponent {
         store.dispatch(initArena({arena}));
 
         const characters = [
-            {name: 'Bob', healthPointsTotal: 3, photo: 1},
-            {name: 'Alice', healthPointsTotal: 3, photo: 2},
-            {name: 'Ken', healthPointsTotal: 3, photo: 3},
-            {name: 'Ada', healthPointsTotal: 3, photo: 5},
+            {name: 'Bob', healthPointsTotal: 3, photo: 1/*, playerId: 1*/},
+            {name: 'Alice', healthPointsTotal: 3, photo: 2/*, playerId: 1*/},
+            {name: 'Ken', healthPointsTotal: 3, photo: 3/*, playerId: 2*/},
+            {name: 'Ada', healthPointsTotal: 3, photo: 5/*, playerId: 2*/},
         ].reduce((charactersTmp, character) => {
             const position: Position = characterService.getRandomAvailablePosition(arena, charactersTmp);
             const characterToAdd: Character = {
@@ -41,16 +41,23 @@ export class AppComponent {
                 healthPoints: character.healthPointsTotal,
                 actionPoints: character.healthPointsTotal,
                 selected: false,
+                // playerId: character.playerId,
             };
             characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
             store.dispatch(addCharacter({character: characterToAdd}));
             return [...charactersTmp, characterToAdd];
         }, []);
 
+        // const players = [
+        //     {id: 1, name: 'Player 1'},
+        //     {id: 2, name: 'Player 2'},
+        // ];
+
         const game: Game = {
             round: 1,
-            roundTimeline: gameService.generateRoundTimeline(1, characters),
+            roundTimeline: gameService.generateRoundTimeline(1, characters/*, players*/),
             timelineCurrentStep: 1,
+            // players
         };
         store.dispatch(initGame({game}));
 

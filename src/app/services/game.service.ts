@@ -13,6 +13,12 @@ export class GameService {
 
     private game: Game;
 
+    // TODO: a mettre dans le store ???
+    // private gameStartPlayer: number;
+
+    // TODO: à paramétrer ?
+    // private readonly maxPlayerNumber = 2;
+
     constructor(private store: Store<AppState>) {
         this.store.select(gameSelector).subscribe(game => this.game = game);
     }
@@ -32,10 +38,26 @@ export class GameService {
         }
     }
 
-    public generateRoundTimeline(round: number, characters: Character[]): TimelineCharacter[] {
+    public generateRoundTimeline(round: number, characters: Character[]/*, players: Player[]*/): TimelineCharacter[] {
+        // const roundStartPlayer = this.getRoundStartPlayer(round, this.gameStartPlayer, players.length);
         return characters
             .filter(c => c.healthPoints > 0)
-            .map(c => ({name: c.name, photo: c.photo, alive: true}));
+            .map(c => ({name: c.name, photo: c.photo, alive: true/*, playerId: c.playerId*/}));
+        // .sort((c1, c2) => {
+        //     const c1Idx = (c1.playerId >= roundStartPlayer) ? c1.playerId : c1.playerId + this.maxPlayerNumber;
+        //     const c2Idx = (c2.playerId >= roundStartPlayer) ? c2.playerId : c2.playerId + this.maxPlayerNumber;
+        //     return c1Idx - c2Idx;
+        // });
     }
 
+    /**
+     * Return a random number between 1 and {numberOfPlayers}
+     */
+    private getRandomStartPlayerNumber(numberOfPlayers: number): number {
+        return Math.floor(Math.random() * numberOfPlayers) + 1;
+    }
+
+    private getRoundStartPlayer(round: number, gameStartPlayer: number, numberOfPlayers: number): number {
+        return ((round + gameStartPlayer) % numberOfPlayers) + 1;
+    }
 }
