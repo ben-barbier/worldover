@@ -5,7 +5,7 @@ import {ActionType, Character, CharacterAction, CharacterOrientation} from '../s
 import {Square, SquareState} from '../store/models/square.model';
 import {ArenaService} from './arena.service';
 import {Store} from '@ngrx/store';
-import {AppState, charactersSelector} from '../store/app.state';
+import {AppState, charactersSelector, selectedCharacterSelector} from '../store/app.state';
 import {AudioService, Sound} from './audio.service';
 import * as CharactersActions from '../store/actions/characters.actions';
 
@@ -16,10 +16,13 @@ export class CharacterService {
 
     private characters: Character[];
 
+    private selectedCharacter: Character;
+
     constructor(private arenaService: ArenaService,
                 private audioService: AudioService,
                 private store: Store<AppState>) {
         this.store.select(charactersSelector).subscribe(characters => this.characters = characters);
+        this.store.select(selectedCharacterSelector).subscribe(selectedCharacter => this.selectedCharacter = selectedCharacter);
     }
 
     public getRandomAvailablePosition(arena: Arena, characters: Character[]): Position {
@@ -44,7 +47,7 @@ export class CharacterService {
             character: target,
             damage: 1,
         }));
-        this.refreshAllAvailableActions();
+        this.refreshSelectedCharacterAvailableActions();
     }
 
     public move(actionType: ActionType, character: Character, destination: Position): void {
@@ -53,7 +56,7 @@ export class CharacterService {
             destination,
             orientation: this.getOrientation(actionType),
         }));
-        this.refreshAllAvailableActions();
+        this.refreshSelectedCharacterAvailableActions();
     }
 
     private getAttackActions(position, character: Character, characters: Character[]) {
@@ -144,14 +147,10 @@ export class CharacterService {
         ].find(e => e.action === actionType).orientation;
     }
 
-    public refreshAllAvailableActions(): void {
-        return this.characters.forEach(character => this.refreshAvailableActions(character));
-    }
-
-    public refreshAvailableActions(character: Character): void {
+    public refreshSelectedCharacterAvailableActions(): void {
         this.store.dispatch(CharactersActions.updateAvailableActions({
-            characterName: character.name,
-            availableActions: this.getAvailableActions(character),
+            characterName: this.selectedCharacter.name,
+            availableActions: this.getAvailableActions(this.selectedCharacter),
         }));
     }
 

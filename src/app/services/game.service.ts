@@ -38,6 +38,7 @@ export class GameService {
         } else {
             this.gotoNextRound();
         }
+        this.characterService.refreshSelectedCharacterAvailableActions();
     }
 
     private gotoNextStep(step: number): void {
@@ -74,8 +75,6 @@ export class GameService {
             this.store.dispatch(CharactersActions.selectCharacter({characterName: nextCharacter.name}));
 
         }
-
-        this.characterService.refreshAllAvailableActions();
 
     }
 
