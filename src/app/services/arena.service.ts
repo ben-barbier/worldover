@@ -2,15 +2,19 @@ import {Injectable} from '@angular/core';
 import {Arena} from '../store/models/arena.model';
 import {Square, SquareState, SquareStyle} from '../store/models/square.model';
 import {Position} from '../store/models/position.model';
-import {State} from '@ngrx/store';
-import {AppState} from '../store/app.state';
+import {Store} from '@ngrx/store';
+import {AppState, arenaSelector} from '../store/app.state';
+import {Character} from '../store/models/character.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ArenaService {
 
-    constructor(private state: State<AppState>) {
+    private arena: Arena;
+
+    constructor(private store: Store<AppState>) {
+        store.select(arenaSelector).subscribe(arena => this.arena = arena);
     }
 
     public generateArena(height: number, width: number): Arena {
@@ -79,7 +83,15 @@ export class ArenaService {
     }
 
     public getSquare(position: Position): Square {
-        return this.state.getValue().arena.squares.find(square => Position.equals(square.position, position));
+        return this.arena.squares.find(square => Position.equals(square.position, position));
+    }
+
+    public getCharactersOnCollapsedSquare(characters: Character[], arena: Arena): Character[] {
+        return characters.filter(character =>
+            arena.squares.find(square =>
+                Position.equals(character.position, square.position) && square.state === SquareState.COLLAPSED
+            )
+        );
     }
 
     private getStyle(arenaHeight: number, arenaWidth: number, position: Position, collapseCount: number = 0): SquareStyle {
@@ -125,4 +137,5 @@ export class ArenaService {
             return SquareStyle.EMPTY;
         }
     }
+
 }

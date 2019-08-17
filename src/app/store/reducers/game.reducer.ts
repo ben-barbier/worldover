@@ -13,11 +13,11 @@ export const gameReducer = createReducer(
     initialState,
     on(GameActions.initGame, (state, action) => action.game),
     on(GameActions.gotoTimelineStep, (state, action) => ({...state, timelineCurrentStep: action.step})),
-    on(GameActions.gotoNextRound, (state, action): Game => {
+    on(GameActions.updateRoundNumber, (state, action): Game => {
         const firstAliveCharacterIdx = state.roundTimeline.findIndex(c => c.alive) + 1;
         return {...state, round: state.round + 1, timelineCurrentStep: firstAliveCharacterIdx};
     }),
-    on(CharactersActions.characterDamaged, (state, action) => {
+    on(CharactersActions.damageCharacter, (state, action) => {
         const targetHealthAfterAttack = action.character.healthPoints - action.damage;
         if (targetHealthAfterAttack <= 0) {
             return {
@@ -32,7 +32,7 @@ export const gameReducer = createReducer(
         }
         return state;
     }),
-    on(CharactersActions.characterKilled, (state, action) => {
+    on(CharactersActions.killCharacter, (state, action) => {
         return {
             ...state,
             roundTimeline: state.roundTimeline.map(character => {

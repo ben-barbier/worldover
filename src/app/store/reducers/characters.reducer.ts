@@ -35,23 +35,22 @@ export const charactersReducer = createReducer(
                 orientation: action.orientation,
             });
     }),
-    on(CharactersActions.characterDamaged, (state, action) => {
+    on(CharactersActions.damageCharacter, (state, action) => {
         return state
             .filter(c => c.name !== action.character.name)
             .concat({
                 ...action.character,
                 healthPoints: action.character.healthPoints - 1,
-            })
-            .filter(c => c.healthPoints > 0);
+            });
     }),
-    on(CharactersActions.characterKilled, (state, action) => {
+    on(CharactersActions.killCharacter, (state, action) => {
         return state
             .filter(c => c.name !== action.character.name)
             .concat({
                 ...action.character,
                 healthPoints: 0,
-            })
-            .filter(c => c.healthPoints > 0);
+                availableActions: [],
+            });
     }),
     on(CharactersActions.updateAvailableActions, (state, action) => {
         const characterToUpdate = state.find(c => c.name === action.characterName);
@@ -66,24 +65,7 @@ export const charactersReducer = createReducer(
             .filter(c => c.name !== action.characterName)
             .concat({...characterToSelect, selected: true});
     }),
-    on(ArenaActions.updateArena, (state, action) => {
-
-        const collapsedPositions = action.updatedArena.squares
-            .filter(s => s.state === SquareState.COLLAPSED)
-            .map(s => s.position);
-
-        return state
-            .map(character => {
-                const characterIsOnCollapsedSquare = collapsedPositions.some(cp => Position.equals(character.position, cp));
-                if (characterIsOnCollapsedSquare) {
-                    return {...character, healthPoints: 0, availableActions: []};
-                }
-                return character;
-            })
-            .filter(c => c.healthPoints > 0);
-
-    }),
-    on(GameActions.gotoNextRound, (state, action) => {
+    on(GameActions.updateRoundNumber, (state, action) => {
         return [...state].map(c => ({...c, actionPoints: c.healthPoints}));
     }),
 );

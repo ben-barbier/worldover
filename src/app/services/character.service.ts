@@ -6,7 +6,7 @@ import {Square, SquareState} from '../store/models/square.model';
 import {ArenaService} from './arena.service';
 import {State, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
-import {attackCharacter, characterDamaged, moveCharacter} from '../store/actions/characters.actions';
+import {attackCharacter, damageCharacter, moveCharacter} from '../store/actions/characters.actions';
 import {AudioService, Sound} from './audio.service';
 
 @Injectable({
@@ -39,7 +39,7 @@ export class CharacterService {
             attacker,
             orientation: this.getOrientation(actionType),
         }));
-        this.store.dispatch(characterDamaged({
+        this.store.dispatch(damageCharacter({
             character: target,
             damage: 1,
         }));

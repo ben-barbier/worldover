@@ -17,13 +17,13 @@ export const attackCharacter = createAction(
     props<{ attacker: Character, orientation: CharacterOrientation }>(),
 );
 
-export const characterDamaged = createAction(
-    '[Character] Character damaged',
+export const damageCharacter = createAction(
+    '[Character] Damage character',
     props<{ character: Character, damage: number }>(),
 );
 
-export const characterKilled = createAction(
-    '[Character] Character killed',
+export const killCharacter = createAction(
+    '[Character] Kill character',
     props<{ character: Character }>(),
 );
 

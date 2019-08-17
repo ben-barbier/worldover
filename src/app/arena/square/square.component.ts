@@ -5,9 +5,7 @@ import {Square, SquareState, SquareStyle} from '../../store/models/square.model'
 import {ActionType, ActionTypeCategory, Character} from '../../store/models/character.model';
 import {Position} from '../../store/models/position.model';
 import {filter, flatMap, map, tap} from 'rxjs/operators';
-import {attackCharacter, moveCharacter} from '../../store/actions/characters.actions';
 import {CharacterService} from '../../services/character.service';
-import {AudioService, Sound} from '../../services/audio.service';
 
 @Component({
     selector: 'app-square',
@@ -64,14 +62,13 @@ export class SquareComponent implements OnInit, AfterViewInit {
     private selectedCharacter: Character;
 
     constructor(private store: Store<AppState>,
-                private characterService: CharacterService,
-                private audioService: AudioService) {
+                private characterService: CharacterService) {
     }
 
     ngOnInit(): void {
         this.store.select(charactersSelector).subscribe((characters: Character[]) => {
             const characterOnSquare = characters.find(character => Position.equals(character.position, this.square.position));
-            this.character = characterOnSquare ? characterOnSquare : null;
+            this.character = (characterOnSquare && characterOnSquare.healthPoints > 0) ? characterOnSquare : null;
         });
         this.store.select(selectedCharacterSelector).pipe(
             tap(selectedCharacter => this.selectedCharacter = selectedCharacter),

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {CharacterService} from '../../services/character.service';
-import {switchMap, tap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {State} from '@ngrx/store';
 import {Character} from '../models/character.model';
@@ -9,9 +9,7 @@ import * as CharactersActions from '../actions/characters.actions';
 import * as ArenaActions from '../actions/arena.actions';
 import * as GameActions from '../actions/game.actions';
 import {MatDialog} from '@angular/material';
-import {WinComponent} from '../../dialogs/result/win/win.component';
-import {ExaequoComponent} from '../../dialogs/result/exaequo/exaequo.component';
-import {AudioService, Sound} from '../../services/audio.service';
+import {AudioService} from '../../services/audio.service';
 
 @Injectable()
 export class CharactersEffects {
@@ -64,7 +62,7 @@ export class CharactersEffects {
 
     goToTheNextRound$ = createEffect(() =>
         this.actions.pipe(
-            ofType(GameActions.gotoNextRound),
+            ofType(GameActions.updateRoundNumber),
             switchMap(this.refreshAllAvailableActions.bind(this)),
         )
     );

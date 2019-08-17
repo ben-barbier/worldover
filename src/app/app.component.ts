@@ -10,6 +10,7 @@ import {Position} from './store/models/position.model';
 import {Game} from './store/models/game.model';
 import {GameService} from './services/game.service';
 import {initGame} from './store/actions/game.actions';
+import {TimelineService} from './services/timeline.service';
 
 @Component({
     selector: 'app-root',
@@ -21,7 +22,7 @@ export class AppComponent {
     constructor(private store: Store<AppState>,
                 private characterService: CharacterService,
                 private arenaService: ArenaService,
-                private gameService: GameService) {
+                private timelineService: TimelineService) {
 
         const arena = arenaService.generateArena(5, 5);
         store.dispatch(initArena({arena}));
@@ -49,7 +50,7 @@ export class AppComponent {
 
         const game: Game = {
             round: 1,
-            roundTimeline: gameService.generateRoundTimeline(1, characters),
+            roundTimeline: timelineService.generateTimeline(characters),
             timelineCurrentStep: 1,
         };
         store.dispatch(initGame({game}));

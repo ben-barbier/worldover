@@ -25,7 +25,6 @@ import {WinComponent} from './dialogs/result/win/win.component';
 import {ExaequoComponent} from './dialogs/result/exaequo/exaequo.component';
 import {KeyboardManagerDirective} from './directives/keyboard-manager.directive';
 import {GameOverEffects} from './store/effects/game-over.effects';
-import {CollapseWeakenEffects} from './store/effects/collapse-weaken.effects';
 
 @NgModule({
     declarations: [
@@ -60,7 +59,6 @@ import {CollapseWeakenEffects} from './store/effects/collapse-weaken.effects';
         }),
         EffectsModule.forRoot([
             CharactersEffects,
-            CollapseWeakenEffects,
             GameOverEffects,
         ]),
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
