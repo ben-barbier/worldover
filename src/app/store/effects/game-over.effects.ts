@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {CharacterService} from '../../services/character.service';
 import {tap} from 'rxjs/operators';
-import {AppState} from '../app.state';
-import {State} from '@ngrx/store';
+import {AppState, charactersSelector} from '../app.state';
+import {Store} from '@ngrx/store';
 import {Character} from '../models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
 import * as ArenaActions from '../actions/arena.actions';
@@ -15,12 +15,17 @@ import {AudioService, Sound} from '../../services/audio.service';
 @Injectable()
 export class GameOverEffects {
 
+    private characters: Character[];
+
     gameOver$ = createEffect(() =>
         this.actions.pipe(
-            ofType(CharactersActions.attackCharacter, ArenaActions.updateArena),
+            ofType(
+                CharactersActions.damageCharacter,
+                CharactersActions.killCharacter,
+                ArenaActions.updateArena
+            ),
             tap(() => {
-                const characters: Character[] = this.state.getValue().characters;
-                const aliveCharacters = characters.filter(c => c.healthPoints > 0);
+                const aliveCharacters = this.characters.filter(c => c.healthPoints > 0);
                 if (aliveCharacters.length === 1) {
                     this.audioService.playAudio(Sound.FINISH);
                     this.dialog.open(WinComponent, {
@@ -33,10 +38,11 @@ export class GameOverEffects {
         ), {dispatch: false});
 
     constructor(private actions: Actions,
-                private state: State<AppState>,
+                private store: Store<AppState>,
                 private characterService: CharacterService,
                 private dialog: MatDialog,
                 private audioService: AudioService) {
+        store.select(charactersSelector).subscribe(characters => this.characters = characters);
     }
 
 }

@@ -15,7 +15,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatRippleModule} from '@angular/material/core';
 import {EffectsModule} from '@ngrx/effects';
-import {CharactersEffects} from './store/effects/characters.effects';
 import {CharacterStatusComponent} from './character-status/character-status.component';
 import {TimelineComponent} from './timeline/timeline.component';
 import {ServiceWorkerModule} from '@angular/service-worker';
@@ -58,7 +57,6 @@ import {GameOverEffects} from './store/effects/game-over.effects';
             },
         }),
         EffectsModule.forRoot([
-            CharactersEffects,
             GameOverEffects,
         ]),
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),

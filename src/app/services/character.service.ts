@@ -4,20 +4,22 @@ import {Arena} from '../store/models/arena.model';
 import {ActionType, Character, CharacterAction, CharacterOrientation} from '../store/models/character.model';
 import {Square, SquareState} from '../store/models/square.model';
 import {ArenaService} from './arena.service';
-import {State, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
-import {attackCharacter, damageCharacter, moveCharacter} from '../store/actions/characters.actions';
+import {Store} from '@ngrx/store';
+import {AppState, charactersSelector} from '../store/app.state';
 import {AudioService, Sound} from './audio.service';
+import * as CharactersActions from '../store/actions/characters.actions';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CharacterService {
 
+    private characters: Character[];
+
     constructor(private arenaService: ArenaService,
                 private audioService: AudioService,
-                private state: State<AppState>,
                 private store: Store<AppState>) {
+        this.store.select(charactersSelector).subscribe(characters => this.characters = characters);
     }
 
     public getRandomAvailablePosition(arena: Arena, characters: Character[]): Position {
@@ -27,30 +29,31 @@ export class CharacterService {
 
     public getAvailableActions(character: Character): CharacterAction[] {
         const position = character.position;
-        const characters: Character[] = this.state.getValue().characters;
-        const attackActions: CharacterAction[] = this.getAttackActions(position, character, characters);
-        const moveActions: CharacterAction[] = this.getMoveActions(position, character, characters);
+        const attackActions: CharacterAction[] = this.getAttackActions(position, character, this.characters);
+        const moveActions: CharacterAction[] = this.getMoveActions(position, character, this.characters);
         return [...attackActions, ...moveActions];
     }
 
     public attack(actionType: ActionType, attacker: Character, target: Character): void {
         this.audioService.playAudio(Sound.ATTACK);
-        this.store.dispatch(attackCharacter({
+        this.store.dispatch(CharactersActions.attackCharacter({
             attacker,
             orientation: this.getOrientation(actionType),
         }));
-        this.store.dispatch(damageCharacter({
+        this.store.dispatch(CharactersActions.damageCharacter({
             character: target,
             damage: 1,
         }));
+        this.refreshAllAvailableActions();
     }
 
     public move(actionType: ActionType, character: Character, destination: Position): void {
-        this.store.dispatch(moveCharacter({
+        this.store.dispatch(CharactersActions.moveCharacter({
             character,
             destination,
             orientation: this.getOrientation(actionType),
         }));
+        this.refreshAllAvailableActions();
     }
 
     private getAttackActions(position, character: Character, characters: Character[]) {
@@ -105,7 +108,9 @@ export class CharacterService {
     }
 
     private positionIsFree(position: Position, characters: Character[]) {
-        const usedPositions = characters.map(character => character.position);
+        const usedPositions = characters
+            .filter(character => character.healthPoints > 0)
+            .map(character => character.position);
         return usedPositions.every(usedPosition => !Position.equals(usedPosition, position));
     }
 
@@ -137,6 +142,17 @@ export class CharacterService {
             {action: ActionType.ATTACK_BOTTOM, orientation: CharacterOrientation.BOTTOM},
             {action: ActionType.ATTACK_LEFT, orientation: CharacterOrientation.LEFT},
         ].find(e => e.action === actionType).orientation;
+    }
+
+    public refreshAllAvailableActions(): void {
+        return this.characters.forEach(character => this.refreshAvailableActions(character));
+    }
+
+    public refreshAvailableActions(character: Character): void {
+        this.store.dispatch(CharactersActions.updateAvailableActions({
+            characterName: character.name,
+            availableActions: this.getAvailableActions(character),
+        }));
     }
 
 }

@@ -3,14 +3,13 @@ import {Store} from '@ngrx/store';
 import {AppState} from './store/app.state';
 import {initArena} from './store/actions/arena.actions';
 import {addCharacter} from './store/actions/characters.actions';
+import {initGame} from './store/actions/game.actions';
 import {CharacterService} from './services/character.service';
 import {ArenaService} from './services/arena.service';
+import {TimelineService} from './services/timeline.service';
 import {Character, CharacterOrientation} from './store/models/character.model';
 import {Position} from './store/models/position.model';
 import {Game} from './store/models/game.model';
-import {GameService} from './services/game.service';
-import {initGame} from './store/actions/game.actions';
-import {TimelineService} from './services/timeline.service';
 
 @Component({
     selector: 'app-root',

@@ -67,14 +67,14 @@ export class SquareComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.store.select(charactersSelector).subscribe((characters: Character[]) => {
-            const characterOnSquare = characters.find(character => Position.equals(character.position, this.square.position));
-            this.character = (characterOnSquare && characterOnSquare.healthPoints > 0) ? characterOnSquare : null;
+            this.character = characters.find(
+                character => (character.healthPoints > 0) && Position.equals(character.position, this.square.position)
+            );
         });
         this.store.select(selectedCharacterSelector).pipe(
             tap(selectedCharacter => this.selectedCharacter = selectedCharacter),
-            filter(selectedCharacter => !!selectedCharacter),
             tap(() => this.availableAction = null),
-            map(character => character.availableActions),
+            map(selectedCharacter => selectedCharacter.availableActions),
             flatMap(e => e),
             filter(action => Position.equals(action.target, this.square.position)),
             map(action => action.type)
