@@ -24,6 +24,7 @@ import {WinComponent} from './dialogs/result/win/win.component';
 import {ExaequoComponent} from './dialogs/result/exaequo/exaequo.component';
 import {KeyboardManagerDirective} from './directives/keyboard-manager.directive';
 import {GameOverEffects} from './store/effects/game-over.effects';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 @NgModule({
     declarations: [
@@ -60,11 +61,9 @@ import {GameOverEffects} from './store/effects/game-over.effects';
             GameOverEffects,
         ]),
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        // FIXME: https://github.com/ngrx/platform/issues/1054 (Effect gets called twice when using StoreDevtoolsModule.instrument())
-        // FIXME: Solution => do not use ☠State<AppState>☠ in application ️
-        // StoreDevtoolsModule.instrument({
-        //     maxAge: 10
-        // }),
+        StoreDevtoolsModule.instrument({
+            maxAge: 10
+        }),
     ],
     providers: [
         {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {disableClose: true, hasBackdrop: true}}

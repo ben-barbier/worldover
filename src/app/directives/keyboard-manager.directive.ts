@@ -1,9 +1,8 @@
 import {Directive, HostListener} from '@angular/core';
-import {State, Store} from '@ngrx/store';
-import {AppState, selectedCharacterSelector} from '../store/app.state';
+import {Store} from '@ngrx/store';
+import {AppState, charactersSelector, selectedCharacterSelector} from '../store/app.state';
 import {ArenaService} from '../services/arena.service';
 import {ActionType, ActionTypeCategory, Character} from '../store/models/character.model';
-import {moveCharacter} from '../store/actions/characters.actions';
 import {CharacterService} from '../services/character.service';
 
 @Directive({
@@ -11,6 +10,7 @@ import {CharacterService} from '../services/character.service';
 })
 export class KeyboardManagerDirective {
 
+    private characters: Character[];
     private selectedCharacter: Character;
 
     @HostListener('window:keyup', ['$event'])
@@ -27,12 +27,12 @@ export class KeyboardManagerDirective {
     }
 
     constructor(private store: Store<AppState>,
-                private state: State<AppState>,
                 private arenaService: ArenaService,
                 private characterService: CharacterService) {
         store.select(selectedCharacterSelector).subscribe(selectedCharacter =>
             this.selectedCharacter = selectedCharacter
         );
+        store.select(charactersSelector).subscribe(characters => this.characters = characters);
     }
 
     public hasAction(actionType: ActionType): boolean {
@@ -40,7 +40,6 @@ export class KeyboardManagerDirective {
     }
 
     public executeAction(actionType: ActionType) {
-        const characters: Character[] = this.state.getValue().characters;
         const action = this.selectedCharacter.availableActions.find(a => a.type === actionType);
 
         if (ActionTypeCategory.MOVE.includes(actionType)) {
@@ -50,7 +49,7 @@ export class KeyboardManagerDirective {
         if (ActionTypeCategory.ATTACK.includes(actionType)) {
             this.characterService.attack(
                 actionType, this.selectedCharacter,
-                this.characterService.getPositionCharacter(action.target, characters));
+                this.characterService.getPositionCharacter(action.target, this.characters));
         }
     }
 
