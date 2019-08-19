@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState, gameSelector} from '../store/app.state';
-import {TimelineCharacter} from '../store/models/game.model';
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState, gameSelector } from '../store/app.state';
+import { TimelineCharacter } from '../store/models/game.model';
 
 @Component({
     selector: 'app-timeline',
@@ -15,7 +15,7 @@ export class TimelineComponent {
     public timelineCurrentStep: number;
 
     constructor(private store: Store<AppState>) {
-        this.store.select(gameSelector).subscribe(game => {
+        this.store.select(gameSelector).subscribe((game) => {
             this.round = game.round;
             this.roundTimeline = game.roundTimeline;
             this.timelineCurrentStep = game.timelineCurrentStep;

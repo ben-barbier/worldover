@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {Position} from '../store/models/position.model';
-import {Arena} from '../store/models/arena.model';
-import {ActionType, Character, CharacterAction, CharacterOrientation} from '../store/models/character.model';
-import {Square, SquareState} from '../store/models/square.model';
-import {ArenaService} from './arena.service';
-import {Store} from '@ngrx/store';
-import {AppState, charactersSelector, selectedCharacterSelector} from '../store/app.state';
-import {AudioService, Sound} from './audio.service';
+import { Injectable } from '@angular/core';
+import { Position } from '../store/models/position.model';
+import { Arena } from '../store/models/arena.model';
+import { ActionType, Character, CharacterAction, CharacterOrientation } from '../store/models/character.model';
+import { Square, SquareState } from '../store/models/square.model';
+import { ArenaService } from './arena.service';
+import { Store } from '@ngrx/store';
+import { AppState, charactersSelector, selectedCharacterSelector } from '../store/app.state';
+import { AudioService, Sound } from './audio.service';
 import * as CharactersActions from '../store/actions/characters.actions';
 
 @Injectable({
@@ -61,10 +61,10 @@ export class CharacterService {
 
     private getAttackActions(position, character: Character, characters: Character[]) {
         return [
-            {source: position, target: {x: position.x, y: position.y + 1}, type: ActionType.ATTACK_UP},
-            {source: position, target: {x: position.x + 1, y: position.y}, type: ActionType.ATTACK_RIGHT},
-            {source: position, target: {x: position.x, y: position.y - 1}, type: ActionType.ATTACK_BOTTOM},
-            {source: position, target: {x: position.x - 1, y: position.y}, type: ActionType.ATTACK_LEFT},
+            { source: position, target: { x: position.x, y: position.y + 1 }, type: ActionType.ATTACK_UP },
+            { source: position, target: { x: position.x + 1, y: position.y }, type: ActionType.ATTACK_RIGHT },
+            { source: position, target: { x: position.x, y: position.y - 1 }, type: ActionType.ATTACK_BOTTOM },
+            { source: position, target: { x: position.x - 1, y: position.y }, type: ActionType.ATTACK_LEFT },
         ]
             .filter(() => character.healthPoints > 0)
             .filter(() => character.actionPoints > 0)
@@ -74,10 +74,10 @@ export class CharacterService {
 
     private getMoveActions(position, character: Character, characters: Character[]) {
         return [
-            {target: this.arenaService.getSquare({x: position.x, y: position.y + 1}), type: ActionType.MOVE_UP},
-            {target: this.arenaService.getSquare({x: position.x + 1, y: position.y}), type: ActionType.MOVE_RIGHT},
-            {target: this.arenaService.getSquare({x: position.x, y: position.y - 1}), type: ActionType.MOVE_BOTTOM},
-            {target: this.arenaService.getSquare({x: position.x - 1, y: position.y}), type: ActionType.MOVE_LEFT},
+            { target: this.arenaService.getSquare({ x: position.x, y: position.y + 1 }), type: ActionType.MOVE_UP },
+            { target: this.arenaService.getSquare({ x: position.x + 1, y: position.y }), type: ActionType.MOVE_RIGHT },
+            { target: this.arenaService.getSquare({ x: position.x, y: position.y - 1 }), type: ActionType.MOVE_BOTTOM },
+            { target: this.arenaService.getSquare({ x: position.x - 1, y: position.y }), type: ActionType.MOVE_LEFT },
         ]
             .filter(() => character.healthPoints > 0)
             .filter(() => character.actionPoints > 0)
@@ -126,24 +126,24 @@ export class CharacterService {
     }
 
     private getAdjacentSquares(position: Position, arena: Arena): Square[] {
-        return arena.squares.filter(s => {
-            return s.position.x === position.x && s.position.y + 1 === position.y || // ⬆
-                s.position.x + 1 === position.x && s.position.y === position.y ||    // ➡
-                s.position.x === position.x && s.position.y - 1 === position.y ||    // ⬇
-                s.position.x - 1 === position.x && s.position.y === position.y;      // ⬅
+        return arena.squares.filter((square) => {
+            return square.position.x === position.x && square.position.y + 1 === position.y || // ⬆
+                square.position.x + 1 === position.x && square.position.y === position.y ||    // ➡
+                square.position.x === position.x && square.position.y - 1 === position.y ||    // ⬇
+                square.position.x - 1 === position.x && square.position.y === position.y;      // ⬅
         });
     }
 
     public getOrientation(actionType: ActionType): CharacterOrientation {
         return [
-            {action: ActionType.MOVE_UP, orientation: CharacterOrientation.TOP},
-            {action: ActionType.MOVE_RIGHT, orientation: CharacterOrientation.RIGHT},
-            {action: ActionType.MOVE_BOTTOM, orientation: CharacterOrientation.BOTTOM},
-            {action: ActionType.MOVE_LEFT, orientation: CharacterOrientation.LEFT},
-            {action: ActionType.ATTACK_UP, orientation: CharacterOrientation.TOP},
-            {action: ActionType.ATTACK_RIGHT, orientation: CharacterOrientation.RIGHT},
-            {action: ActionType.ATTACK_BOTTOM, orientation: CharacterOrientation.BOTTOM},
-            {action: ActionType.ATTACK_LEFT, orientation: CharacterOrientation.LEFT},
+            { action: ActionType.MOVE_UP, orientation: CharacterOrientation.TOP },
+            { action: ActionType.MOVE_RIGHT, orientation: CharacterOrientation.RIGHT },
+            { action: ActionType.MOVE_BOTTOM, orientation: CharacterOrientation.BOTTOM },
+            { action: ActionType.MOVE_LEFT, orientation: CharacterOrientation.LEFT },
+            { action: ActionType.ATTACK_UP, orientation: CharacterOrientation.TOP },
+            { action: ActionType.ATTACK_RIGHT, orientation: CharacterOrientation.RIGHT },
+            { action: ActionType.ATTACK_BOTTOM, orientation: CharacterOrientation.BOTTOM },
+            { action: ActionType.ATTACK_LEFT, orientation: CharacterOrientation.LEFT },
         ].find(e => e.action === actionType).orientation;
     }
 

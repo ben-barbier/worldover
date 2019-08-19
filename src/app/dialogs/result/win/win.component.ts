@@ -1,6 +1,6 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material';
-import {Character} from '../../../store/models/character.model';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material';
+import { Character } from '../../../store/models/character.model';
 
 @Component({
     selector: 'app-win',

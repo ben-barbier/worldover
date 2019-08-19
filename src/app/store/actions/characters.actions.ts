@@ -1,6 +1,6 @@
-import {createAction, props} from '@ngrx/store';
-import {Character, CharacterAction, CharacterOrientation} from '../models/character.model';
-import {Position} from '../models/position.model';
+import { createAction, props } from '@ngrx/store';
+import { Character, CharacterAction, CharacterOrientation } from '../models/character.model';
+import { Position } from '../models/position.model';
 
 export const addCharacter = createAction(
     '[Character] Add character',

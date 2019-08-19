@@ -18,12 +18,15 @@ fieldset > div {
     img {
         max-height: 3em;
         border: 4px solid;
+
         &.current {
             border-color: yellow;
         }
+
         &:not(.current) {
             border-color: transparent;
         }
+
         &.dead {
             border-color: darkslategrey;
             filter: grayscale(100%);

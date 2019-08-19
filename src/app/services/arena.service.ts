@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {Arena} from '../store/models/arena.model';
-import {Square, SquareState, SquareStyle} from '../store/models/square.model';
-import {Position} from '../store/models/position.model';
-import {Store} from '@ngrx/store';
-import {AppState, arenaSelector} from '../store/app.state';
-import {Character} from '../store/models/character.model';
+import { Injectable } from '@angular/core';
+import { Arena } from '../store/models/arena.model';
+import { Square, SquareState, SquareStyle } from '../store/models/square.model';
+import { Position } from '../store/models/position.model';
+import { Store } from '@ngrx/store';
+import { AppState, arenaSelector } from '../store/app.state';
+import { Character } from '../store/models/character.model';
 
 @Injectable({
     providedIn: 'root'
@@ -19,12 +19,12 @@ export class ArenaService {
 
     public generateArena(height: number, width: number): Arena {
         const squares: Square[] = [];
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                squares.push({position: {x, y}, state: SquareState.SAFE, style: this.getStyle(height, width, {x, y})});
+        for (let y = 0; y < height; y = y + 1) {
+            for (let x = 0; x < width; x = x + 1) {
+                squares.push({ position: { x, y }, state: SquareState.SAFE, style: this.getStyle(height, width, { x, y }) });
             }
         }
-        return {height, width, squares, collapseCount: 0};
+        return { height, width, squares, collapseCount: 0 };
     }
 
     public collapseArena(arena: Arena): Arena {
@@ -36,9 +36,9 @@ export class ArenaService {
             squares: arena.squares.map(square => ({
                 ...square,
                 style: this.getStyle(arena.height, arena.width, square.position, collapseCount),
-            })).map(square => {
+            })).map((square) => {
                 if (borders.some(border => Position.equals(border.position, square.position))) {
-                    return {...square, state: SquareState.COLLAPSED};
+                    return { ...square, state: SquareState.COLLAPSED };
                 }
                 return square;
             }),
@@ -49,9 +49,9 @@ export class ArenaService {
         const borders = this.getBorders(arena);
         return {
             ...arena,
-            squares: arena.squares.map(square => {
+            squares: arena.squares.map((square) => {
                 if (borders.some(border => Position.equals(border.position, square.position))) {
-                    return {...square, state: SquareState.WEAKENED};
+                    return { ...square, state: SquareState.WEAKENED };
                 }
                 return square;
             }),
@@ -59,7 +59,7 @@ export class ArenaService {
     }
 
     public getBorders(arena: Arena): Square[] {
-        return arena.squares.filter(square => {
+        return arena.squares.filter((square) => {
             return !!(
                 (
                     square.position.x === arena.collapseCount &&
@@ -106,36 +106,40 @@ export class ArenaService {
         if (position.y === collapseCount) {
             if (position.x === collapseCount) {
                 return SquareStyle.BOTTOM_LEFT_CORNER;
-            } else if (position.x === arenaWidth - 1 - collapseCount) {
+            }
+            if (position.x === arenaWidth - 1 - collapseCount) {
                 return SquareStyle.BOTTOM_RIGHT_CORNER;
-            } else if (position.x > collapseCount && position.x < arenaWidth - 1 - collapseCount) {
+            }
+            if (position.x > collapseCount && position.x < arenaWidth - 1 - collapseCount) {
                 return SquareStyle.BOTTOM_CENTER;
-            } else {
-                return SquareStyle.EMPTY;
             }
-        } else if (position.y === arenaHeight - 1 - collapseCount) {
-            if (position.x === collapseCount) {
-                return SquareStyle.TOP_LEFT_CORNER;
-            } else if (position.x === arenaWidth - 1 - collapseCount) {
-                return SquareStyle.TOP_RIGHT_CORNER;
-            } else if (position.x > collapseCount && position.x < arenaWidth - 1 - collapseCount) {
-                return SquareStyle.TOP_CENTER;
-            } else {
-                return SquareStyle.EMPTY;
-            }
-        } else if (position.y > collapseCount && position.y < arenaHeight - 1 - collapseCount) {
-            if (position.x === collapseCount) {
-                return SquareStyle.MIDDLE_LEFT;
-            } else if (position.x === arenaWidth - 1 - collapseCount) {
-                return SquareStyle.MIDDLE_RIGHT;
-            } else if (position.x > collapseCount && position.x < arenaWidth - 1 - collapseCount) {
-                return SquareStyle.MIDDLE_CENTER;
-            } else {
-                return SquareStyle.EMPTY;
-            }
-        } else {
             return SquareStyle.EMPTY;
         }
+        if (position.y === arenaHeight - 1 - collapseCount) {
+            if (position.x === collapseCount) {
+                return SquareStyle.TOP_LEFT_CORNER;
+            }
+            if (position.x === arenaWidth - 1 - collapseCount) {
+                return SquareStyle.TOP_RIGHT_CORNER;
+            }
+            if (position.x > collapseCount && position.x < arenaWidth - 1 - collapseCount) {
+                return SquareStyle.TOP_CENTER;
+            }
+            return SquareStyle.EMPTY;
+        }
+        if (position.y > collapseCount && position.y < arenaHeight - 1 - collapseCount) {
+            if (position.x === collapseCount) {
+                return SquareStyle.MIDDLE_LEFT;
+            }
+            if (position.x === arenaWidth - 1 - collapseCount) {
+                return SquareStyle.MIDDLE_RIGHT;
+            }
+            if (position.x > collapseCount && position.x < arenaWidth - 1 - collapseCount) {
+                return SquareStyle.MIDDLE_CENTER;
+            }
+            return SquareStyle.EMPTY;
+        }
+        return SquareStyle.EMPTY;
     }
 
 }

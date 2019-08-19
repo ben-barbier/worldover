@@ -9,6 +9,7 @@ body {
     background: no-repeat url("/assets/background/sky.jpg");
     user-select: none;
     touch-action: none;
+
     & > h1 {
         color: white;
         transition: 300ms ease-in;

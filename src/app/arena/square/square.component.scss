@@ -21,6 +21,7 @@ section {
     &.hasAction {
         cursor: pointer;
     }
+
     &.collapsed {
         cursor: not-allowed;
     }
@@ -47,6 +48,7 @@ mat-icon {
     // change color from black to white
     filter: invert(100%) opacity(80%);
     transition: 100ms ease-in;
+
     &:hover {
         transition: 100ms ease-in;
         // change color from black to red

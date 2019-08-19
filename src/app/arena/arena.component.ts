@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {AppState, arenaSelector} from '../store/app.state';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {sortBy as _sortBy} from 'lodash';
-import {Arena} from '../store/models/arena.model';
+import { Component } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { AppState, arenaSelector } from '../store/app.state';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { sortBy as _sortBy } from 'lodash';
+import { Arena } from '../store/models/arena.model';
 
 @Component({
     selector: 'app-arena',
@@ -23,7 +23,7 @@ export class ArenaComponent {
 
     private static orderSquares(arena: Arena): Arena {
         const sortedSquares = _sortBy(arena.squares, square => -(square.position.y * 1_000) + square.position.x);
-        return {...arena, squares: sortedSquares};
+        return { ...arena, squares: sortedSquares };
     }
 
 }

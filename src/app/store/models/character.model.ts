@@ -1,4 +1,4 @@
-import {Position} from './position.model';
+import { Position } from './position.model';
 
 export class Character {
     name: string;

@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {CharacterService} from '../../services/character.service';
-import {tap} from 'rxjs/operators';
-import {AppState, charactersSelector} from '../app.state';
-import {Store} from '@ngrx/store';
-import {Character} from '../models/character.model';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { CharacterService } from '../../services/character.service';
+import { tap } from 'rxjs/operators';
+import { AppState, charactersSelector } from '../app.state';
+import { Store } from '@ngrx/store';
+import { Character } from '../models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
 import * as ArenaActions from '../actions/arena.actions';
-import {MatDialog} from '@angular/material';
-import {WinComponent} from '../../dialogs/result/win/win.component';
-import {ExaequoComponent} from '../../dialogs/result/exaequo/exaequo.component';
-import {AudioService, Sound} from '../../services/audio.service';
+import { MatDialog } from '@angular/material';
+import { WinComponent } from '../../dialogs/result/win/win.component';
+import { ExaequoComponent } from '../../dialogs/result/exaequo/exaequo.component';
+import { AudioService, Sound } from '../../services/audio.service';
 
 @Injectable()
 export class GameOverEffects {
@@ -29,13 +29,13 @@ export class GameOverEffects {
                 if (aliveCharacters.length === 1) {
                     this.audioService.playAudio(Sound.FINISH);
                     this.dialog.open(WinComponent, {
-                        data: {winner: aliveCharacters[0]}
+                        data: { winner: aliveCharacters[0] }
                     });
                 } else if (aliveCharacters.length === 0) {
                     this.dialog.open(ExaequoComponent);
                 }
             }),
-        ), {dispatch: false});
+        ), { dispatch: false });
 
     constructor(private actions: Actions,
                 private store: Store<AppState>,

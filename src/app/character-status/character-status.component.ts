@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {AppState, selectedCharacterSelector} from '../store/app.state';
-import {Character} from '../store/models/character.model';
-import {GameService} from '../services/game.service';
+import { Component } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { AppState, selectedCharacterSelector } from '../store/app.state';
+import { Character } from '../store/models/character.model';
+import { GameService } from '../services/game.service';
 
 @Component({
     selector: 'app-character-status',

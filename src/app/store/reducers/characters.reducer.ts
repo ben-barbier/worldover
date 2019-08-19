@@ -1,9 +1,6 @@
-import {Action, createReducer, on} from '@ngrx/store';
-import {Character} from '../models/character.model';
-import {Position} from '../models/position.model';
-import {SquareState} from '../models/square.model';
+import { Action, createReducer, on } from '@ngrx/store';
+import { Character } from '../models/character.model';
 import * as CharactersActions from '../actions/characters.actions';
-import * as ArenaActions from '../actions/arena.actions';
 import * as GameActions from '../actions/game.actions';
 
 export const initialState: Character[] = [];
@@ -12,7 +9,7 @@ export const charactersReducer = createReducer(
     initialState,
     on(CharactersActions.addCharacter, (state, action) => {
         if (state.length === 0) {
-            return [{...action.character, selected: true}];
+            return [{ ...action.character, selected: true }];
         }
         return [...state, action.character];
     }),
@@ -56,17 +53,17 @@ export const charactersReducer = createReducer(
         const characterToUpdate = state.find(c => c.name === action.characterName);
         return state
             .filter(c => c.name !== action.characterName)
-            .concat({...characterToUpdate, availableActions: action.availableActions});
+            .concat({ ...characterToUpdate, availableActions: action.availableActions });
     }),
     on(CharactersActions.selectCharacter, (state, action) => {
         const characterToSelect = state.find(c => c.name === action.characterName);
         return state
-            .map(c => ({...c, selected: false}))
+            .map(c => ({ ...c, selected: false }))
             .filter(c => c.name !== action.characterName)
-            .concat({...characterToSelect, selected: true});
+            .concat({ ...characterToSelect, selected: true });
     }),
     on(GameActions.updateRoundNumber, (state, action) => {
-        return [...state].map(c => ({...c, actionPoints: c.healthPoints}));
+        return [...state].map(c => ({ ...c, actionPoints: c.healthPoints }));
     }),
 );
 

@@ -1,4 +1,4 @@
-import {Position} from './position.model';
+import { Position } from './position.model';
 
 export enum SquareState {
     SAFE,

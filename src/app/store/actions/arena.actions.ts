@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {Arena} from '../models/arena.model';
+import { createAction, props } from '@ngrx/store';
+import { Arena } from '../models/arena.model';
 
 export const initArena = createAction(
     '[Arena] Init',

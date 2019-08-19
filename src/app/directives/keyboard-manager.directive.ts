@@ -1,9 +1,9 @@
-import {Directive, HostListener} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState, charactersSelector, selectedCharacterSelector} from '../store/app.state';
-import {ArenaService} from '../services/arena.service';
-import {ActionType, ActionTypeCategory, Character} from '../store/models/character.model';
-import {CharacterService} from '../services/character.service';
+import { Directive, HostListener } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState, charactersSelector, selectedCharacterSelector } from '../store/app.state';
+import { ArenaService } from '../services/arena.service';
+import { ActionType, ActionTypeCategory, Character } from '../store/models/character.model';
+import { CharacterService } from '../services/character.service';
 
 @Directive({
     selector: '[appKeyboardManager]',
@@ -12,6 +12,15 @@ export class KeyboardManagerDirective {
 
     private characters: Character[];
     private selectedCharacter: Character;
+
+    constructor(private store: Store<AppState>,
+                private arenaService: ArenaService,
+                private characterService: CharacterService) {
+        store.select(selectedCharacterSelector).subscribe(selectedCharacter =>
+            this.selectedCharacter = selectedCharacter
+        );
+        store.select(charactersSelector).subscribe(characters => this.characters = characters);
+    }
 
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
@@ -24,15 +33,6 @@ export class KeyboardManagerDirective {
         } else if (event.key === 'ArrowLeft') {
             this.executeAvailableAction([ActionType.MOVE_LEFT, ActionType.ATTACK_LEFT]);
         }
-    }
-
-    constructor(private store: Store<AppState>,
-                private arenaService: ArenaService,
-                private characterService: CharacterService) {
-        store.select(selectedCharacterSelector).subscribe(selectedCharacter =>
-            this.selectedCharacter = selectedCharacter
-        );
-        store.select(charactersSelector).subscribe(characters => this.characters = characters);
     }
 
     public hasAction(actionType: ActionType): boolean {

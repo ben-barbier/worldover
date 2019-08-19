@@ -1,4 +1,4 @@
-import {Square} from './square.model';
+import { Square } from './square.model';
 
 export class Arena {
     height: number;

@@ -1,6 +1,6 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {Character, CharacterOrientation} from '../../store/models/character.model';
-import {interval} from 'rxjs';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Character, CharacterOrientation } from '../../store/models/character.model';
+import { interval } from 'rxjs';
 
 interface FrameCoordinates {
     sx: number;
@@ -28,7 +28,7 @@ export class CharacterComponent {
     @Input()
     public character: Character;
 
-    @ViewChild('canvasElement', {static: false})
+    @ViewChild('canvasElement', { static: false })
     set canvas(canvasElement: ElementRef) {
         const canvas: HTMLCanvasElement = canvasElement.nativeElement;
         const sprites = new Image();

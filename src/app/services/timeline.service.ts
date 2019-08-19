@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {TimelineCharacter} from '../store/models/game.model';
-import {Character} from '../store/models/character.model';
+import { Injectable } from '@angular/core';
+import { TimelineCharacter } from '../store/models/game.model';
+import { Character } from '../store/models/character.model';
 
 @Injectable({
     providedIn: 'root'

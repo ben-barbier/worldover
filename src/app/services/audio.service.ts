@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 export enum Sound {
     ATTACK,
@@ -28,14 +28,14 @@ export class AudioService {
     constructor() {
     }
 
-    private getRandomSound(sounds: HTMLAudioElement[]): HTMLAudioElement {
-        return sounds[Math.floor(Math.random() * sounds.length)];
-    }
-
     public playAudio(sound: Sound): Promise<void> {
         const soundToPlay = this.getRandomSound(this.sounds.get(sound));
         soundToPlay.currentTime = 0;
         return soundToPlay.play();
+    }
+
+    private getRandomSound(sounds: HTMLAudioElement[]): HTMLAudioElement {
+        return sounds[Math.floor(Math.random() * sounds.length)];
     }
 
 }

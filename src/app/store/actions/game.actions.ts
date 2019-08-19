@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {Game, TimelineCharacter} from '../models/game.model';
+import { createAction, props } from '@ngrx/store';
+import { Game, TimelineCharacter } from '../models/game.model';
 
 export const initGame = createAction(
     '[Game] Init',
