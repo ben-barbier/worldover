@@ -23,7 +23,6 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material';
 import { WinComponent } from './dialogs/result/win/win.component';
 import { ExaequoComponent } from './dialogs/result/exaequo/exaequo.component';
 import { KeyboardManagerDirective } from './directives/keyboard-manager.directive';
-import { GameOverEffects } from './store/effects/game-over.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
@@ -57,9 +56,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
                 strictActionImmutability: true
             },
         }),
-        EffectsModule.forRoot([
-            GameOverEffects,
-        ]),
+        EffectsModule.forRoot([]),
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         StoreDevtoolsModule.instrument({
             maxAge: 10

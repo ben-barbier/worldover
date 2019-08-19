@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { AppState, charactersSelector, selectedCharacterSelector } from '../store/app.state';
 import { AudioService, Sound } from './audio.service';
 import * as CharactersActions from '../store/actions/characters.actions';
+import { GameOverService } from './game-over.service';
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +21,7 @@ export class CharacterService {
 
     constructor(private arenaService: ArenaService,
                 private audioService: AudioService,
+                private gameOverService: GameOverService,
                 private store: Store<AppState>) {
         this.store.select(charactersSelector).subscribe(characters => this.characters = characters);
         this.store.select(selectedCharacterSelector).subscribe(selectedCharacter => this.selectedCharacter = selectedCharacter);
@@ -48,6 +50,7 @@ export class CharacterService {
             damage: 1,
         }));
         this.refreshSelectedCharacterAvailableActions();
+        this.gameOverService.check();
     }
 
     public move(actionType: ActionType, character: Character, destination: Position): void {

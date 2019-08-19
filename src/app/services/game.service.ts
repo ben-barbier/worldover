@@ -10,6 +10,7 @@ import { updateArena } from '../store/actions/arena.actions';
 import { CharacterService } from './character.service';
 import * as CharactersActions from '../store/actions/characters.actions';
 import * as GameActions from '../store/actions/game.actions';
+import { GameOverService } from './game-over.service';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,8 @@ export class GameService {
     constructor(private store: Store<AppState>,
                 private timelineService: TimelineService,
                 private characterService: CharacterService,
-                private arenaService: ArenaService) {
+                private arenaService: ArenaService,
+                private gameOverService: GameOverService) {
         this.store.select(gameSelector).subscribe(game => this.game = game);
         this.store.select(arenaSelector).subscribe(arena => this.arena = arena);
         this.store.select(charactersSelector).subscribe(characters => this.characters = characters);
@@ -62,6 +64,8 @@ export class GameService {
 
             const updatedTimeline = this.timelineService.generateTimeline(this.characters);
             this.store.dispatch(GameActions.updateTimeline({ timeline: updatedTimeline }));
+
+            this.gameOverService.check();
 
             const nextCharacter = updatedTimeline.find(c => c.alive);
             this.store.dispatch(CharactersActions.selectCharacter({ characterName: nextCharacter.name }));
