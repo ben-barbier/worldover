@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { AppState, charactersSelector, selectedCharacterSelector } from '../store/app.state';
 import { AudioService, Sound } from './audio.service';
 import * as CharactersActions from '../store/actions/characters.actions';
-import { GameOverService } from './game-over.service';
+import {GameOverService} from './game-over.service';
 
 @Injectable({
     providedIn: 'root'
