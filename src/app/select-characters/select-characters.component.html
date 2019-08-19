@@ -1,0 +1,17 @@
+<h2>Choose your fighters</h2>
+
+<section id="characters-container">
+    <div *ngFor="let character of characters"
+         class="character"
+         [ngClass]="{selected: character.selected}"
+         (click)="selectCharacter(character)">
+        <img [src]="'assets/characters/heads/' + character.photo + '.png'" class="head" alt="😑">
+        {{ character.name }}
+    </div>
+</section>
+
+<button mat-button mat-raised-button color="primary"
+        (click)="validate()"
+        [disabled]="(selectedCharacters$ | async) !== charactersOnArena">
+    <mat-icon>how_to_reg</mat-icon> {{selectedCharacters$ | async}} / {{charactersOnArena}}
+</button>

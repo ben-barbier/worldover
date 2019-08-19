@@ -24,6 +24,7 @@ import { WinComponent } from './dialogs/result/win/win.component';
 import { ExaequoComponent } from './dialogs/result/exaequo/exaequo.component';
 import { KeyboardManagerDirective } from './directives/keyboard-manager.directive';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { SelectCharactersComponent } from './select-characters/select-characters.component';
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
         WinComponent,
         ExaequoComponent,
         KeyboardManagerDirective,
+        SelectCharactersComponent,
     ],
     imports: [
         BrowserModule,
@@ -69,6 +71,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     entryComponents: [
         ExaequoComponent,
         WinComponent,
+        SelectCharactersComponent,
     ]
 })
 export class AppModule {

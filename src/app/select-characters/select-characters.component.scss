@@ -1,0 +1,38 @@
+@import '~@angular/material/theming';
+
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+    margin-top: 24px;
+}
+
+#characters-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 75vw;
+    justify-content: center;
+    .character {
+        padding: 5px;
+        margin: 4px;
+        text-align: center;
+        box-sizing: border-box;
+        border: 2px solid transparent;
+        @include mat-elevation-transition;
+        @include mat-elevation(1);
+        &.selected {
+            @include mat-elevation(4);
+            border: 2px solid cornflowerblue;
+            transition: border 100ms ease-in;
+        }
+    }
+}
+
+img.head {
+    height: 50px;
+    display: block;
+}

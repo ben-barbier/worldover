@@ -7,10 +7,13 @@ import { initGame } from './store/actions/game.actions';
 import { CharacterService } from './services/character.service';
 import { ArenaService } from './services/arena.service';
 import { TimelineService } from './services/timeline.service';
-import { Character, CharacterOrientation } from './store/models/character.model';
+import { Character } from './store/models/character.model';
 import { Position } from './store/models/position.model';
 import { Game } from './store/models/game.model';
 import { version } from 'package.json';
+import { MatDialog } from '@angular/material';
+import { SelectCharactersComponent } from './select-characters/select-characters.component';
+import { config } from './config';
 
 @Component({
     selector: 'app-root',
@@ -24,38 +27,29 @@ export class AppComponent {
     constructor(private store: Store<AppState>,
                 private characterService: CharacterService,
                 private arenaService: ArenaService,
+                private dialog: MatDialog,
                 private timelineService: TimelineService) {
 
-        const arena = arenaService.generateArena(5, 5);
-        store.dispatch(initArena({ arena }));
+        dialog.open(SelectCharactersComponent).afterClosed().subscribe((selectedCharacters) => {
 
-        const characters = [
-            { name: 'Bob', healthPointsTotal: 3, photo: 1 },
-            { name: 'Alice', healthPointsTotal: 3, photo: 2 },
-            { name: 'Ken', healthPointsTotal: 3, photo: 3 },
-            { name: 'Ada', healthPointsTotal: 3, photo: 5 },
-        ].reduce((charactersTmp, character) => {
-            const position: Position = characterService.getRandomAvailablePosition(arena, charactersTmp);
-            const characterToAdd: Character = {
-                ...character,
-                position,
-                availableActions: [],
-                orientation: CharacterOrientation.BOTTOM,
-                healthPoints: character.healthPointsTotal,
-                actionPoints: character.healthPointsTotal,
-                selected: false,
+            const arena = arenaService.generateArena(config.arenaHeight, config.arenaWidth);
+            store.dispatch(initArena({ arena }));
+
+            const characters = selectedCharacters.reduce((charactersTmp, character) => {
+                const position: Position = characterService.getRandomAvailablePosition(arena, charactersTmp);
+                const characterToAdd: Character = { ...character, position };
+                characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
+                store.dispatch(addCharacter({ character: characterToAdd }));
+                return [...charactersTmp, characterToAdd];
+            }, []);
+
+            const game: Game = {
+                round: 1,
+                roundTimeline: timelineService.generateTimeline(characters),
+                timelineCurrentStep: 1,
             };
-            characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
-            store.dispatch(addCharacter({ character: characterToAdd }));
-            return [...charactersTmp, characterToAdd];
-        }, []);
-
-        const game: Game = {
-            round: 1,
-            roundTimeline: timelineService.generateTimeline(characters),
-            timelineCurrentStep: 1,
-        };
-        store.dispatch(initGame({ game }));
+            store.dispatch(initGame({ game }));
+        });
 
     }
 
