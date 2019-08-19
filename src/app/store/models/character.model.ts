@@ -26,7 +26,7 @@ export enum CharacterOrientation {
 }
 
 export enum ActionType {
-    MOVE_UP,
+    MOVE_UP = 1, // Useful to not consider MOVE_UP falsy
     MOVE_RIGHT,
     MOVE_BOTTOM,
     MOVE_LEFT,
