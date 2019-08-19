@@ -62,7 +62,7 @@ export class CharacterService {
         this.refreshSelectedCharacterAvailableActions();
     }
 
-    private getAttackActions(position, character: Character, characters: Character[]) {
+    private getAttackActions(position: Position, character: Character, characters: Character[]): CharacterAction[] {
         return [
             { source: position, target: { x: position.x, y: position.y + 1 }, type: ActionType.ATTACK_UP },
             { source: position, target: { x: position.x + 1, y: position.y }, type: ActionType.ATTACK_RIGHT },
@@ -71,11 +71,11 @@ export class CharacterService {
         ]
             .filter(() => character.healthPoints > 0)
             .filter(() => character.actionPoints > 0)
-            .filter(ca => this.positionHasCharacter(ca.target, characters))
-            .filter(ca => this.getPositionCharacter(ca.target, characters).healthPoints);
+            .filter(ca => this.positionHasAliveCharacter(ca.target, characters))
+            .filter(ca => this.getPositionAliveCharacter(ca.target, characters));
     }
 
-    private getMoveActions(position, character: Character, characters: Character[]) {
+    private getMoveActions(position: Position, character: Character, characters: Character[]): CharacterAction[] {
         return [
             { target: this.arenaService.getSquare({ x: position.x, y: position.y + 1 }), type: ActionType.MOVE_UP },
             { target: this.arenaService.getSquare({ x: position.x + 1, y: position.y }), type: ActionType.MOVE_RIGHT },
@@ -94,8 +94,8 @@ export class CharacterService {
             }));
     }
 
-    public getPositionCharacter(position: Position, characters: Character[]): Character {
-        return characters.find(c => Position.equals(c.position, position));
+    public getPositionAliveCharacter(position: Position, characters: Character[]): Character {
+        return characters.find(c => Position.equals(c.position, position) && c.healthPoints > 0);
     }
 
     private getAvailableSquares(arena: Arena, characters: Character[]): Square[] {
@@ -120,8 +120,8 @@ export class CharacterService {
         return usedPositions.every(usedPosition => !Position.equals(usedPosition, position));
     }
 
-    private positionHasCharacter(position: Position, characters: Character[]): boolean {
-        return characters.some(c => Position.equals(c.position, position));
+    private positionHasAliveCharacter(position: Position, characters: Character[]): boolean {
+        return characters.some(c => Position.equals(c.position, position) && c.healthPoints > 0);
     }
 
     private adjacentSquaresAreFree(square, arena: Arena, characters: Character[]) {

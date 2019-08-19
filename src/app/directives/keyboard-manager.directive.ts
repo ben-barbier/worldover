@@ -49,7 +49,7 @@ export class KeyboardManagerDirective {
         if (ActionTypeCategory.ATTACK.includes(actionType)) {
             this.characterService.attack(
                 actionType, this.selectedCharacter,
-                this.characterService.getPositionCharacter(action.target, this.characters));
+                this.characterService.getPositionAliveCharacter(action.target, this.characters));
         }
     }
 
