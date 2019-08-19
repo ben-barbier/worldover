@@ -10,6 +10,7 @@ import { TimelineService } from './services/timeline.service';
 import { Character, CharacterOrientation } from './store/models/character.model';
 import { Position } from './store/models/position.model';
 import { Game } from './store/models/game.model';
+import { version } from 'package.json';
 
 @Component({
     selector: 'app-root',
@@ -17,6 +18,8 @@ import { Game } from './store/models/game.model';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
+    public version: string = version;
 
     constructor(private store: Store<AppState>,
                 private characterService: CharacterService,
