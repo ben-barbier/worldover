@@ -77,8 +77,8 @@ export class CharacterComponent {
                                        frameWidth: number, frameHeight: number,
                                        charactersByRow: number): FrameCoordinates {
         return {
-            sx: (frameWidth * frame) + ((character % charactersByRow) - 1) * 3 * frameWidth,
-            sy: (Math.floor(character / charactersByRow) * charactersByRow * frameHeight) + (orientation * frameHeight),
+            sx: (frameWidth * frame) + ((character - 1) % charactersByRow) * 3 * frameWidth,
+            sy: (Math.floor(character / (charactersByRow + 1)) * charactersByRow * frameHeight) + (orientation * frameHeight),
             width: frameWidth,
             height: frameHeight,
         };
