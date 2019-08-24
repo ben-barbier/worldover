@@ -20,3 +20,8 @@ export const updateTimeline = createAction(
     '[Game] Update timeline',
     props<{ timeline: TimelineCharacter[] }>(),
 );
+
+export const updateGameFromFirebase = createAction(
+    '[Game] Update from firebase',
+    props<{ updatedGame: Game }>(),
+);

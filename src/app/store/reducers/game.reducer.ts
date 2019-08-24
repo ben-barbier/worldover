@@ -12,6 +12,7 @@ export const initialState: Game = {
 export const gameReducer = createReducer(
     initialState,
     on(GameActions.initGame, (state, action) => action.game),
+    on(GameActions.updateGameFromFirebase, (state, action) => action.updatedGame),
     on(GameActions.gotoTimelineStep, (state, action) => ({ ...state, timelineCurrentStep: action.step })),
     on(GameActions.updateRoundNumber, (state, action): Game => {
         const firstAliveCharacterIdx = state.roundTimeline.findIndex(c => c.alive) + 1;

@@ -19,12 +19,20 @@ import { CharacterStatusComponent } from './character-status/character-status.co
 import { TimelineComponent } from './timeline/timeline.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WinComponent } from './dialogs/result/win/win.component';
 import { ExaequoComponent } from './dialogs/result/exaequo/exaequo.component';
 import { KeyboardManagerDirective } from './directives/keyboard-manager.directive';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { SelectCharactersComponent } from './select-characters/select-characters.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { SelectInstanceComponent } from './select-instance/select-instance.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FirebaseEffects } from './store/effects/firebase.effects';
 
 @NgModule({
     declarations: [
@@ -39,6 +47,7 @@ import { SelectCharactersComponent } from './select-characters/select-characters
         ExaequoComponent,
         KeyboardManagerDirective,
         SelectCharactersComponent,
+        SelectInstanceComponent,
     ],
     imports: [
         BrowserModule,
@@ -48,6 +57,10 @@ import { SelectCharactersComponent } from './select-characters/select-characters
         MatRippleModule,
         MatGridListModule,
         MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        ReactiveFormsModule,
         StoreModule.forRoot({
             arena: fromArena.reducer,
             characters: fromCharacters.reducer,
@@ -58,11 +71,17 @@ import { SelectCharactersComponent } from './select-characters/select-characters
                 strictActionImmutability: true
             },
         }),
-        EffectsModule.forRoot([]),
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        EffectsModule.forRoot([
+            FirebaseEffects,
+        ]),
         StoreDevtoolsModule.instrument({
             maxAge: 10
         }),
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        AngularFireModule.initializeApp(environment.firebase, 'worldover'),
+        AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+        // AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
+        // AngularFireStorageModule // imports firebase/storage only needed for storage features
     ],
     providers: [
         { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { disableClose: true, hasBackdrop: true } }
@@ -72,6 +91,7 @@ import { SelectCharactersComponent } from './select-characters/select-characters
         ExaequoComponent,
         WinComponent,
         SelectCharactersComponent,
+        SelectInstanceComponent,
     ]
 })
 export class AppModule {

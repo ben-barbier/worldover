@@ -1,0 +1,42 @@
+<div *ngIf="(isOnline$ | async) === true" class="online-mode">
+    <h2>Join online instance</h2>
+
+    <form autocomplete="off" [formGroup]="instanceForm" (ngSubmit)="validate(instanceForm.get('instanceName').value, instanceExists)">
+
+        <mat-form-field>
+            <input matInput placeholder="Online instance name" formControlName="instanceName">
+            <button mat-button type="button" *ngIf="instanceForm.get('instanceName').value" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="instanceForm.get('instanceName').setValue('')">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <button mat-button mat-raised-button color="primary" type="submit"
+                [disabled]="!instanceForm.valid || loading === true">
+            <span *ngIf="instanceExists === true">Join instance</span>
+            <span *ngIf="instanceExists === false">Start new instance</span>
+            <mat-icon *ngIf="loading === false">send</mat-icon>
+            <mat-spinner diameter="30" *ngIf="loading === true" color="primary"></mat-spinner>
+        </button>
+
+    </form>
+
+    <!--
+    // TODO: imeplement offline mode
+    <div class="offline-alternative">
+        <div class="or-devider">
+            <div class="line"></div>
+            <div>or</div>
+            <div class="line"></div>
+        </div>
+        <button mat-stroked-button (click)="playOffline()">play offline</button>
+    </div>
+    -->
+</div>
+
+<div *ngIf="(isOnline$ | async) === false" class="offline-mode">
+    <mat-icon class="offline">wifi_off</mat-icon>
+    <button mat-button mat-raised-button color="primary">
+        Play offline
+    </button>
+</div>

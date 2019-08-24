@@ -13,6 +13,7 @@ export const arenaReducer = createReducer(
     initialState,
     on(ArenaActions.initArena, (state, action): Arena => action.arena),
     on(ArenaActions.updateArena, (state, action): Arena => action.updatedArena),
+    on(ArenaActions.updateArenaFromFirebase, (state, action): Arena => action.updatedArena),
 );
 
 export function reducer(state: Arena | undefined, action: Action) {

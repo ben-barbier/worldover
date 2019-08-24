@@ -10,3 +10,8 @@ export const updateArena = createAction(
     '[Arena] Update',
     props<{ updatedArena: Arena }>(),
 );
+
+export const updateArenaFromFirebase = createAction(
+    '[Arena] Update from firebase',
+    props<{ updatedArena: Arena }>(),
+);

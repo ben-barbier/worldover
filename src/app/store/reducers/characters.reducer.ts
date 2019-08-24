@@ -7,10 +7,11 @@ export const initialState: Character[] = [];
 
 export const charactersReducer = createReducer(
     initialState,
+    on(CharactersActions.updateCharactersFromFirebase, (state, action) => action.updatedCharacters),
     on(CharactersActions.addCharacter, (state, action) => {
-        if (state.length === 0) {
-            return [{ ...action.character, selected: true }];
-        }
+        // if (state.length === 0) {
+        //     return [{ ...action.character, selected: true }];
+        // }
         return [...state, action.character];
     }),
     on(CharactersActions.moveCharacter, (state, action) => {

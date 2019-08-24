@@ -22,6 +22,7 @@ button {
         text-align: center;
         box-sizing: border-box;
         border: 2px solid transparent;
+        cursor: pointer;
         @include mat-elevation-transition;
         @include mat-elevation(1);
         &.selected {

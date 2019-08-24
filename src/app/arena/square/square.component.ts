@@ -73,6 +73,7 @@ export class SquareComponent implements OnInit, AfterViewInit {
         });
         this.store.select(selectedCharacterSelector).pipe(
             tap(selectedCharacter => this.selectedCharacter = selectedCharacter),
+            filter(selectedCharacter => !!selectedCharacter),
             tap(() => this.availableAction = null),
             map(selectedCharacter => selectedCharacter.availableActions),
             flatMap(e => e),

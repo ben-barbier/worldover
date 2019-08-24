@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from './store/app.state';
-import { initArena } from './store/actions/arena.actions';
-import { addCharacter } from './store/actions/characters.actions';
-import { initGame } from './store/actions/game.actions';
 import { CharacterService } from './services/character.service';
 import { ArenaService } from './services/arena.service';
 import { TimelineService } from './services/timeline.service';
@@ -14,6 +11,12 @@ import { version } from 'package.json';
 import { MatDialog } from '@angular/material';
 import { SelectCharactersComponent } from './select-characters/select-characters.component';
 import { config } from './config';
+import { SelectInstanceComponent } from './select-instance/select-instance.component';
+import { InstanceService } from './services/instance.service';
+import * as CharactersActions from './store/actions/characters.actions';
+import * as ArenaActions from './store/actions/arena.actions';
+import * as GameActions from './store/actions/game.actions';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
     selector: 'app-root',
@@ -28,27 +31,42 @@ export class AppComponent {
                 private characterService: CharacterService,
                 private arenaService: ArenaService,
                 private dialog: MatDialog,
-                private timelineService: TimelineService) {
+                private timelineService: TimelineService,
+                private instanceService: InstanceService,
+                private afs: AngularFirestore) {
 
-        dialog.open(SelectCharactersComponent).afterClosed().subscribe((selectedCharacters) => {
+        dialog.open(SelectInstanceComponent).afterClosed().subscribe(({ instanceName, instanceExists }) => {
 
-            const arena = arenaService.generateArena(config.arenaHeight, config.arenaWidth);
-            store.dispatch(initArena({ arena }));
+            this.instanceService.setInstanceName(instanceName);
 
-            const characters = selectedCharacters.reduce((charactersTmp, character) => {
-                const position: Position = characterService.getRandomAvailablePosition(arena, charactersTmp);
-                const characterToAdd: Character = { ...character, position };
-                characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
-                store.dispatch(addCharacter({ character: characterToAdd }));
-                return [...charactersTmp, characterToAdd];
-            }, []);
+            if (instanceExists) {
+                this.instanceService.observeInstance(instanceName);
+            } else {
+                dialog.open(SelectCharactersComponent).afterClosed().subscribe((selectedCharacters) => {
 
-            const game: Game = {
-                round: 1,
-                roundTimeline: timelineService.generateTimeline(characters),
-                timelineCurrentStep: 1,
-            };
-            store.dispatch(initGame({ game }));
+                    const arena = arenaService.generateArena(config.arenaHeight, config.arenaWidth);
+                    store.dispatch(ArenaActions.initArena({ arena }));
+
+                    const characters = selectedCharacters.reduce((charactersTmp, character) => {
+                        const position: Position = characterService.getRandomAvailablePosition(arena, charactersTmp);
+                        const characterToAdd: Character = { ...character, position, selected: !charactersTmp.length };
+                        characterToAdd.availableActions = characterService.getAvailableActions(characterToAdd);
+                        store.dispatch(CharactersActions.addCharacter({ character: characterToAdd }));
+                        return [...charactersTmp, characterToAdd];
+                    }, []);
+
+                    const game: Game = {
+                        round: 1,
+                        roundTimeline: timelineService.generateTimeline(characters),
+                        timelineCurrentStep: 1,
+                    };
+                    store.dispatch(GameActions.initGame({ game }));
+
+                    this.instanceService.createInstance(instanceName, arena, game, characters);
+                    this.instanceService.observeInstance(instanceName);
+
+                });
+            }
         });
 
     }

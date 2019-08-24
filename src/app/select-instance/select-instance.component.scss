@@ -1,0 +1,50 @@
+.online-mode, .offline-mode, .online-mode form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.online-mode {
+    text-align: center;
+
+    button {
+        margin: 0 5px;
+
+        span {
+            margin-right: 10px;
+        }
+
+        mat-spinner {
+            margin: 4px;
+        }
+    }
+
+    .offline-alternative {
+        margin-top: 25px;
+        color: rgba(0, 0, 0, 0.6);
+        width: 100%;
+
+        button {
+            margin-top: 15px;
+        }
+    }
+}
+
+.offline {
+    font-size: 75px;
+    height: 75px;
+    width: 75px;
+}
+
+.or-devider {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .line {
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.3);
+        width: 100%;
+        margin: 0 10px;
+    }
+}

@@ -36,3 +36,8 @@ export const selectCharacter = createAction(
     '[Character] Select character',
     props<{ characterName: string }>(),
 );
+
+export const updateCharactersFromFirebase = createAction(
+    '[Character] Update characters from firebase',
+    props<{ updatedCharacters: Character[] }>(),
+);
